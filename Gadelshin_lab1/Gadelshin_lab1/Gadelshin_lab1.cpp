@@ -3,9 +3,20 @@
 
 #include <iostream>
 
+struct pipe
+{
+    int lenght;
+    std::string purpose;
+};
+
+
 int main()
 {
-    std::cout << "Begini\n";
+    pipe t;
+    t.lenght = 10;
+    t.purpose = "gas";
+    std::cout << "Lenght: " << t.lenght << "\tPurpose: " << t.purpose << std::endl;
+    return 0;
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
