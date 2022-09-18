@@ -1,31 +1,67 @@
-﻿// Gadelshin_lab1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include <iostream>
 
-#include <iostream>
+using namespace std;
 
+//Creating structures
 struct pipe
 {
-    int lenght;
-    std::string purpose;
+    float lenght = 0;
+    float diam = 0;
+    bool repairing = false;
 };
 
+struct CS
+{
+    string name = "";
+    int workshops_num = 0;
+    int workshops_num_run = 0;
+    float efficiency = 0;
+};
+
+//while (true) 
+//{
+ //   cout<<"" << ;
+//}
 
 int main()
 {
-    pipe t;
-    t.lenght = 10;
-    t.purpose = "gas";
-    std::cout << "Lenght: " << t.lenght << "\tPurpose: " << t.purpose << std::endl;
+    int num_option(-1), workshops_num, workshops_num_run;
+    float lenght, diam, efficiency;
+    bool status;
+    string cs_name;
+
+    while (num_option) {
+        cout << "Choose option:\n 1.Add pipe  2.Add CS  3.Show all objects  4.Edit Pipe  5.Edit CS  6.Save  7.Load  0.Exit\n";
+        cin >> num_option;
+        if (num_option == 1) 
+        {
+            cout << "\nInput lenght: ";
+            cin >> lenght;
+            cout << "\nInput diameter: ";
+            cin >> diam;
+            cout << "\n Choose status:\n 0.In repair\n 1.In work:\n ";
+            cin >> status;
+            if (status == 0) {
+                cout << "In repair\n";
+            }
+            else {
+                cout << "In work\n";
+            }
+        }
+        if (num_option == 2) 
+        {
+            cout << "\nInput CS_Name: ";
+            cin >> cs_name;
+            cout << "\nNumber of workshops:";
+            cin >> workshops_num;
+            cout << "\nWorkshops at work: ";
+            cin >> workshops_num_run;
+            cout << "\nEfficiency:  ";
+            cin >> workshops_num;
+        }
+        
+
+    }
     return 0;
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
