@@ -3,11 +3,11 @@
 using namespace std;
 
 //Creating structures
-struct pipe
+struct Pipe
 {
     float lenght = 0;
     float diam = 0;
-    bool repairing = false;
+    bool status = false;
 };
 
 struct CS
@@ -18,49 +18,69 @@ struct CS
     float efficiency = 0;
 };
 
-//while (true) 
-//{
- //   cout<<"" << ;
-//}
-
 int main()
 {
-    int num_option(-1), workshops_num, workshops_num_run;
-    float lenght, diam, efficiency;
-    bool status;
-    string cs_name;
+    Pipe p;
+    CS cs;
+
+    int num_option(-1);
 
     while (num_option) {
         cout << "Choose option:\n 1.Add pipe  2.Add CS  3.Show all objects  4.Edit Pipe  5.Edit CS  6.Save  7.Load  0.Exit\n";
         cin >> num_option;
+
+        //Check
+        if (num_option < 0) 
+        {
+            cout << "ERROR!Choose one of the options below!\n";
+        }
+
         if (num_option == 1) 
         {
-            cout << "\nInput lenght: ";
-            cin >> lenght;
-            cout << "\nInput diameter: ";
-            cin >> diam;
+            cout << "\n pipe lenght: ";
+            cin >> p.lenght;
+            cout << "\n pipe diameter: ";
+            cin >> p.diam;
             cout << "\n Choose status:\n 0.In repair\n 1.In work:\n ";
-            cin >> status;
-            if (status == 0) {
-                cout << "In repair\n";
+            cin >> p.status;
+            if (p.status == 0) {
+                cout << "Pipe in repair\n";
             }
             else {
-                cout << "In work\n";
+                cout << "Pipe in work\n";
             }
         }
         if (num_option == 2) 
         {
-            cout << "\nInput CS_Name: ";
-            cin >> cs_name;
+            cout << "\nCS Name: ";
+            cin >> cs.name;
             cout << "\nNumber of workshops:";
-            cin >> workshops_num;
+            cin >> cs.workshops_num;
             cout << "\nWorkshops at work: ";
-            cin >> workshops_num_run;
+            cin >> cs.workshops_num_run;
             cout << "\nEfficiency:  ";
-            cin >> workshops_num;
+            cin >> cs.efficiency;
         }
+        if (num_option == 3)
+        {
+            cout << "\nPipe \nLenght: "<<p.lenght<<"\nDiameter: "<<p.diam;
+            if (p.status==0) 
+            {
+                cout << "\nPipe in repair\n";
+            }
+            else 
+            {
+                cout << "\nPipe in work\n";
+            }
+            cout << "\nCS \nCS Name: " << cs.name << "\nNumber of workshops: " << cs.workshops_num << "\nWorkshops at work: " << cs.workshops_num_run << "\nEfficiency: " << cs.efficiency << "\n";
+        }
+
         
 
+        if (num_option == 0) 
+        {
+            return 0;
+        }
     }
     return 0;
 }
