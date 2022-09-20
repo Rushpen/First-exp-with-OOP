@@ -67,12 +67,18 @@ int check_workshops(int work_run, int work)
     }
     return work_run;
 }
-void save_file()
+void save_file(float len, float d, int stt, 
+    string nam, int wshops, int wshops_run, float effe)
 {
+    effe = f_efficiency(wshops_run, wshops);
     ofstream output;
     output.open("output_info.txt");
-    output << "Check work";
+    output << "Pipe \npipe length: " <<len <<"\npipe diameter: " 
+        <<d<<"\nstatus work: "<<stt<<"\n"<<"\nCS\nName: "
+        << nam << "\nNumber of workshops: " << wshops << "\nWorkshops in work: "
+        << wshops_run << "\nEfficiency: "<< effe<<"%";
     output.close();
+    cout << "\nData was successfully written to the file\n";
 }
 
 int main()
@@ -137,17 +143,15 @@ int main()
         {
             if (cs.workshops_num == 0)
                 cout << "\nThere is no CS to change!" << endl;
-            else
-            {
+            else {
                 cout << "\nNew number of workshops in work: \n";
                 cin >> cs.workshops_num_run;
-                checking(cs.workshops_num_run);
-                check_workshops(cs.workshops_num, cs.workshops_num_run);
+                check_workshops(cs.workshops_num_run, cs.workshops_num);
             }
         }
-        if (num_option == 6)
-        {
-            save_file();
+        if (num_option == 6) {
+            save_file(p.lenght, p.diam, p.status, cs.name,
+                cs.workshops_num, cs.workshops_num_run, cs.workshops_num_run);
         }
         if (num_option == 0)
         {

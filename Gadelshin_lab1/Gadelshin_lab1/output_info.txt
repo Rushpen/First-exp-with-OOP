@@ -1,1 +1,10 @@
-loh durak
+Pipe 
+pipe length: 0
+pipe diameter: 0
+status work: -1
+
+CS
+Name: 
+Number of workshops: 0
+Workshops in work: 0
+Efficiency: 0%
