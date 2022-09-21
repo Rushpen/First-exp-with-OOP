@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 struct Pipe
@@ -67,19 +68,43 @@ int check_workshops(int work_run, int work)
     }
     return work_run;
 }
-void save_file(float len, float d, int stt, 
+void save_file(float len, float d, int p_stt, 
     string nam, int wshops, int wshops_run, float effe)
 {
     effe = f_efficiency(wshops_run, wshops);
     ofstream output;
     output.open("output_info.txt");
-    output << "Pipe \npipe length: " <<len <<"\npipe diameter: " 
-        <<d<<"\nstatus work: "<<stt<<"\n"<<"\nCS\nName: "
-        << nam << "\nNumber of workshops: " << wshops << "\nWorkshops in work: "
-        << wshops_run << "\nEfficiency: "<< effe<<"%";
+    output <<len <<"\n" <<d<<"\n"<<p_stt<<"\n"<< nam << "\n" << wshops << "\n"<< wshops_run << "\n"<< effe<<"\n";
     output.close();
     cout << "\nData was successfully written to the file\n";
 }
+void option_3(float leng, float diamet, int sts, string name_1, int w_shops, int w_shops_r) {
+    cout << "\nPipe \nLenght: " << leng << "\nDiameter: " << diamet << "\nPipe status: " << sts;
+    cout << "\n\nCS \nCS Name: " << name_1 << "\nNumber of workshops: " <<
+      w_shops << "\nWorkshops at work: " << w_shops_r <<
+      "\nEfficiency: " << f_efficiency(w_shops_r, w_shops) << "%\n";
+}
+void load_file(float& len, float& d, int& p_stt,
+    string& nam, int& wshops, int& wshops_run, float& effe) {
+    ifstream file_1;
+    string line;
+    file_1.open("output_info.txt");
+    getline(file_1, line);
+    len = stof(line);
+    getline(file_1, line);
+    d = stof(line);
+    getline(file_1, line);
+    p_stt = stof(line);
+    getline(file_1, line);
+    nam = line;
+    getline(file_1, line);
+    wshops = stoi(line);
+    getline(file_1, line);
+    wshops_run = stoi(line);
+    getline(file_1, line);
+    effe = stof(line);
+}
+
 
 int main()
 {
@@ -91,44 +116,41 @@ int main()
     {
         menu_choice();
         cin >> num_option;
+        switch (num_option) 
+
         if (num_option < 0 || num_option > 7)
         {
             cout << "\nERROR! Choose one of the options below!\n\n";
         }
-        if (num_option == 1)
-        {
+        if (num_option == 1){
             cout << "\n pipe lenght: ";
             cin >> p.lenght;
+            p.lenght = checking(p.lenght);
             cout << "\n pipe diameter: ";
             cin >> p.diam;
+            p.diam = checking(p.diam);
             cout << "\n Choose pipe status:\n 1.In repair\n 2.In work\n ";
             cin >> p.status;
             p.status = checking_status(p.status);
             p_status(p.status);
         }
-        if (num_option == 2)
-        {
+        if (num_option == 2){
             cout << "\nCS Name: ";
             cin >> cs.name;
             cout << "\nNumber of workshops:";
             cin >> cs.workshops_num;
-            checking(cs.workshops_num);
+            cs.workshops_num = checking(cs.workshops_num);
             cout << "\nWorkshops at work: ";
             cin >> cs.workshops_num_run;
-            checking(cs.workshops_num_run);
+            cs.workshops_num_run = checking(cs.workshops_num_run);
             cs.workshops_num_run = check_workshops(cs.workshops_num_run, cs.workshops_num);
             cout << "\nEfficiency:";
             cout << f_efficiency(cs.workshops_num_run, cs.workshops_num)<<"%\n";
         }
-        if (num_option == 3)
-        {
-            cout << "\nPipe \nLenght: " << p.lenght << "\nDiameter: " << p.diam << "\nPipe status: " <<p.status;
-            cout << "\n\nCS \nCS Name: " << cs.name << "\nNumber of workshops: " <<
-                cs.workshops_num << "\nWorkshops at work: " << cs.workshops_num_run <<
-                "\nEfficiency: " << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
+        if (num_option == 3){
+            option_3(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run);
         }
-        if (num_option == 4)
-        {
+        if (num_option == 4){
             if (p.status == -1)
                 cout << "\nThere is no pipe to change!" << endl;
             else if (p.status == 1 || p.status == 2) {
@@ -139,8 +161,7 @@ int main()
                 cout << "\nChanges accepted!";
             }
         }
-        if (num_option == 5) 
-        {
+        if (num_option == 5) {
             if (cs.workshops_num == 0)
                 cout << "\nThere is no CS to change!" << endl;
             else {
@@ -153,8 +174,12 @@ int main()
             save_file(p.lenght, p.diam, p.status, cs.name,
                 cs.workshops_num, cs.workshops_num_run, cs.workshops_num_run);
         }
-        if (num_option == 0)
-        {
+        if (num_option == 7) {
+            load_file(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run, cs.efficiency);
+            cout << "The data was successfully loaded from the file!";
+        }
+            
+        if (num_option == 0){
             return 0;
         }
     }
