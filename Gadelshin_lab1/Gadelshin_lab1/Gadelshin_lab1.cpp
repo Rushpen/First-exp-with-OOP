@@ -41,16 +41,16 @@ float checking(float check_var)
     }
     return check_var;
 }
-int checking_status(int c)
+int checking_status(int check_st)
 {
-    while ((!c) || (c > 2) || (c < 1))
+    while ((!check_st) || (check_st > 2) || (check_st < 1))
     {
         cout << "Error!\nInput one of the predefined states:\n 1.In repair\n 2.In work\n ";
         cin.clear();
         cin.ignore(INT_MAX, '\n');
-        cin >> c;
+        cin >> check_st;
     }
-    return c;
+    return check_st;
 }
 void menu_choice()
 {
@@ -78,7 +78,8 @@ void save_file(float len, float d, int p_stt,
     output.close();
     cout << "\nData was successfully written to the file\n";
 }
-void option_3(float leng, float diamet, int sts, string name_1, int w_shops, int w_shops_r) {
+void option_3(float leng, float diamet, int sts,
+    string name_1, int w_shops, int w_shops_r) {
     cout << "\nPipe \nLenght: " << leng << "\nDiameter: " << diamet << "\nPipe status: " << sts;
     cout << "\n\nCS \nCS Name: " << name_1 << "\nNumber of workshops: " <<
       w_shops << "\nWorkshops at work: " << w_shops_r <<
@@ -106,14 +107,11 @@ void load_file(float& len, float& d, int& p_stt,
 }
 
 
-int main()
-{
-    Pipe p;
-    CS cs;
-    int num_option(-1);
-
-    while (num_option)
-    {
+int main() {
+   Pipe p;
+   CS cs;
+   int num_option(-1);
+    while (num_option) {
         menu_choice();
         cin >> num_option;
         switch (num_option) 
@@ -150,38 +148,74 @@ int main()
         if (num_option == 3){
             option_3(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run);
         }
-        if (num_option == 4){
-            if (p.status == -1)
-                cout << "\nThere is no pipe to change!" << endl;
-            else if (p.status == 1 || p.status == 2) {
-                cout << "\nInput pipe status: \n";
+        case 1: {
+                cout << "\n pipe lenght: ";
+                cin >> p.lenght;
+                p.lenght = checking(p.lenght);
+                cout << "\n pipe diameter: ";
+                cin >> p.diam;
+                p.diam = checking(p.diam);
+                cout << "\n Choose pipe status:\n 1.In repair\n 2.In work\n ";
                 cin >> p.status;
-                checking_status(p.status);
-                cout << "\nNew Pipe status: " << p.status;
-                cout << "\nChanges accepted!";
+                p.status = checking_status(p.status);
+                p_status(p.status);
+                break;
             }
-        }
-        if (num_option == 5) {
-            if (cs.workshops_num == 0)
-                cout << "\nThere is no CS to change!" << endl;
-            else {
-                cout << "\nNew number of workshops in work: \n";
+        case 2: {
+                cout << "\nCS Name: ";
+                cin >> cs.name;
+                cout << "\nNumber of workshops:";
+                cin >> cs.workshops_num;
+                cs.workshops_num = checking(cs.workshops_num);
+                cout << "\nWorkshops at work: ";
                 cin >> cs.workshops_num_run;
-                check_workshops(cs.workshops_num_run, cs.workshops_num);
+                cs.workshops_num_run = checking(cs.workshops_num_run);
+                cs.workshops_num_run = check_workshops(cs.workshops_num_run, cs.workshops_num);
+                cout << "\nEfficiency:";
+                cout << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
+                break;
             }
+        case 3: {
+                option_3(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run);
+                break;
+            }
+        case 4: {
+                if (p.status == -1)
+                    cout << "\nThere is no pipe to change!" << endl;
+                else if (p.status == 1 || p.status == 2) {
+                    cout << "\nInput pipe status: \n";
+                    cin >> p.status;
+                    checking_status(p.status);
+                    cout << "\nNew Pipe status: " << p.status;
+                    cout << "\nChanges accepted!";
+                }
+                break;
+            }
+        case 5: {
+                if (cs.workshops_num == 0)
+                    cout << "\nThere is no CS to change!" << endl;
+                else {
+                    cout << "\nNew number of workshops in work: \n";
+                    cin >> cs.workshops_num_run;
+                    check_workshops(cs.workshops_num_run, cs.workshops_num);
+                }
+                break;
+            }
+        case 6: {
+                save_file(p.lenght, p.diam, p.status, cs.name,
+                    cs.workshops_num, cs.workshops_num_run, cs.workshops_num_run);
+                break;
+            }
+        case 7: {
+                load_file(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run, cs.efficiency);
+                cout << "The data was successfully loaded from the file!";
+                break;
+            }
+        default: {
+            cout << "\nERROR! Choose one of the options below!\n\n";
+            break;
         }
-        if (num_option == 6) {
-            save_file(p.lenght, p.diam, p.status, cs.name,
-                cs.workshops_num, cs.workshops_num_run, cs.workshops_num_run);
-        }
-        if (num_option == 7) {
-            load_file(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run, cs.efficiency);
-            cout << "The data was successfully loaded from the file!";
-        }
-            
-        if (num_option == 0){
-            return 0;
-        }
+        }    
     }
 }
 
