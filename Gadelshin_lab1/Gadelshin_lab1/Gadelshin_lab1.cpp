@@ -114,39 +114,10 @@ int main() {
     while (num_option) {
         menu_choice();
         cin >> num_option;
-        switch (num_option) 
-
-        if (num_option < 0 || num_option > 7)
-        {
-            cout << "\nERROR! Choose one of the options below!\n\n";
-        }
-        if (num_option == 1){
-            cout << "\n pipe lenght: ";
-            cin >> p.lenght;
-            p.lenght = checking(p.lenght);
-            cout << "\n pipe diameter: ";
-            cin >> p.diam;
-            p.diam = checking(p.diam);
-            cout << "\n Choose pipe status:\n 1.In repair\n 2.In work\n ";
-            cin >> p.status;
-            p.status = checking_status(p.status);
-            p_status(p.status);
-        }
-        if (num_option == 2){
-            cout << "\nCS Name: ";
-            cin >> cs.name;
-            cout << "\nNumber of workshops:";
-            cin >> cs.workshops_num;
-            cs.workshops_num = checking(cs.workshops_num);
-            cout << "\nWorkshops at work: ";
-            cin >> cs.workshops_num_run;
-            cs.workshops_num_run = checking(cs.workshops_num_run);
-            cs.workshops_num_run = check_workshops(cs.workshops_num_run, cs.workshops_num);
-            cout << "\nEfficiency:";
-            cout << f_efficiency(cs.workshops_num_run, cs.workshops_num)<<"%\n";
-        }
-        if (num_option == 3){
-            option_3(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run);
+        switch (num_option) {
+        case 0: {
+            return 0;
+            break;
         }
         case 1: {
                 cout << "\n pipe lenght: ";
