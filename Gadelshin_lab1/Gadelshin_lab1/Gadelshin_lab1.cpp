@@ -21,6 +21,7 @@ float f_efficiency(int work_num_run, int work_num)
 
     return (100*(float(work_num_run) / float(work_num)));
 }
+
 void p_status(int status_p)
 {
     if (status_p == 1) {
@@ -30,6 +31,7 @@ void p_status(int status_p)
         cout << "Status: Pipe is ready for operation\n";
     }
 }
+
 float checking(float check_var)
 {
     while (!check_var || check_var <= 0)
@@ -41,6 +43,7 @@ float checking(float check_var)
     }
     return check_var;
 }
+
 int checking_status(int check_st)
 {
     while ((!check_st) || (check_st > 2) || (check_st < 1))
@@ -52,11 +55,13 @@ int checking_status(int check_st)
     }
     return check_st;
 }
+
 void menu_choice()
 {
     cout << "\nChoose: \n 1.Create pipe  2.Create CS  3.Show all objects" <<
         "4.Edit Pipe  5.Edit CS  6.Save  7.Load  0.Exit\n";
 }
+
 int check_workshops(int work_run, int work)
 {
     while ((work_run > work) || !work_run || !work)
@@ -68,53 +73,54 @@ int check_workshops(int work_run, int work)
     }
     return work_run;
 }
-void save_file(float len, float d, int p_stt, 
-    string nam, int wshops, int wshops_run, float effe)
+
+void save_file(const Pipe& p, const CS& cs)
 {
-    effe = f_efficiency(wshops_run, wshops);
+    //cs.efficiency = f_efficiency(wshops_run, wshops);
     ofstream output;
     output.open("output_info.txt");
-    output <<len <<"\n" <<d<<"\n"<<p_stt<<"\n"<< nam << "\n" << wshops << "\n"<< wshops_run << "\n"<< effe<<"\n";
+    output <<p.lenght <<"\n" <<p.diam<<"\n"<<p.status<<"\n"<< cs.name << "\n" << cs.workshops_num << "\n"<< cs.workshops_num_run << "\n"<< f_efficiency(cs.workshops_num_run, cs.workshops_num)<<"\n";
     output.close();
     cout << "\nData was successfully written to the file\n";
 }
+
 void option_3(float leng, float diamet, int sts,
     string name_1, int w_shops, int w_shops_r) {
-    cout << "\nPipe \nLenght: " << leng << "\nDiameter: " << diamet << "\nPipe status: " << sts;
+    cout << "\nPipe \nLenght: " << leng << "\nDiameter: " << diamet << endl;
+    p_status(sts);
     cout << "\n\nCS \nCS Name: " << name_1 << "\nNumber of workshops: " <<
       w_shops << "\nWorkshops at work: " << w_shops_r <<
       "\nEfficiency: " << f_efficiency(w_shops_r, w_shops) << "%\n";
 }
-void load_file(float& len, float& d, int& p_stt,
-    string& nam, int& wshops, int& wshops_run, float& effe) {
+
+void load_file(Pipe& p, CS& cs) {
     ifstream file_1;
     string line;
     file_1.open("output_info.txt");
     getline(file_1, line);
-    len = stof(line);
+    p.lenght = stof(line);
     getline(file_1, line);
-    d = stof(line);
+    p.diam = stof(line);
     getline(file_1, line);
-    p_stt = stof(line);
+    p.status = stoi(line);
     getline(file_1, line);
-    nam = line;
+    cs.name = line;
     getline(file_1, line);
-    wshops = stoi(line);
+    cs.workshops_num = stoi(line);
     getline(file_1, line);
-    wshops_run = stoi(line);
+    cs.workshops_num_run = stoi(line);
     getline(file_1, line);
-    effe = stof(line);
+    cs.efficiency = stof(line);
 }
 
 
 int main() {
-   Pipe p;
-   CS cs;
+   Pipe p; CS cs;
    int num_option(-1);
     while (num_option) {
         menu_choice();
         cin >> num_option;
-        switch (num_option) {
+        switch (num_option)     {
         case 0: {
             return 0;
             break;
@@ -173,12 +179,11 @@ int main() {
                 break;
             }
         case 6: {
-                save_file(p.lenght, p.diam, p.status, cs.name,
-                    cs.workshops_num, cs.workshops_num_run, cs.workshops_num_run);
+                save_file(p, cs);
                 break;
             }
         case 7: {
-                load_file(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run, cs.efficiency);
+                load_file(p, cs);
                 cout << "The data was successfully loaded from the file!";
                 break;
             }
