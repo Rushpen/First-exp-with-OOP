@@ -3,6 +3,7 @@
 #include <string>
 using namespace std;
 
+//Создание структур
 struct Pipe
 {
     float lenght = 0;
@@ -12,16 +13,11 @@ struct Pipe
 struct CS
 {
     string name = "";
-    int workshops_num = 0, workshops_num_run = 0;
+    float workshops_num = 0, workshops_num_run = 0;
     float efficiency = 0;
 };
 
-float f_efficiency(int work_num_run, int work_num) 
-{
-
-    return (100*(float(work_num_run) / float(work_num)));
-}
-
+//Создание функций
 void p_status(int status_p)
 {
     if (status_p == 1) {
@@ -34,7 +30,7 @@ void p_status(int status_p)
 
 float checking(float check_var)
 {
-    while (!check_var || check_var <= 0)
+    while (!check_var || check_var <= 0 )
     {
         cout << "Error!\nInput another number!" << endl;
         cin.clear();
@@ -56,13 +52,31 @@ int checking_status(int check_st)
     return check_st;
 }
 
+float f_efficiency(int work_num_run, int work_num)
+{
+
+    return (100 * (float(work_num_run) / float(work_num)));
+}
+
 void menu_choice()
 {
     cout << "\nChoose: \n 1.Create pipe  2.Create CS  3.Show all objects" <<
         "4.Edit Pipe  5.Edit CS  6.Save  7.Load  0.Exit\n";
 }
 
-int check_workshops(int work_run, int work)
+float check_work_shops(float w)
+{
+    while (!w || w <= 0 || (w - floor(w) != 0))
+    {
+        cout << "Error!\nInput another number!" << endl;
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        cin >> w;
+    }
+    return w;
+}
+
+float check_working(float work_run, float work)
 {
     while ((work_run > work) || !work_run || !work)
     {
@@ -74,23 +88,62 @@ int check_workshops(int work_run, int work)
     return work_run;
 }
 
+void create_pipe(Pipe& p) {
+    cout << "\n pipe lenght: ";
+    cin >> p.lenght;
+    p.lenght = checking(p.lenght);
+    cout << "\n pipe diameter: ";
+    cin >> p.diam;
+    p.diam = checking(p.diam);
+    cout << "\n Choose pipe status:\n 1.In repair\n 2.In work\n ";
+    cin >> p.status;
+    p.status = checking_status(p.status);
+    p_status(p.status);
+}
+
+void create_cs(CS& cs) {
+    cout << "\nCS Name: ";
+    cin >> cs.name;
+    cout << "\nNumber of workshops:";
+    cin >> cs.workshops_num;
+    cs.workshops_num = check_work_shops(cs.workshops_num);
+    cout << "\nWorkshops at work: ";
+    cin >> cs.workshops_num_run;
+    cs.workshops_num_run = check_work_shops(cs.workshops_num_run);
+    cs.workshops_num_run = check_working(cs.workshops_num_run, cs.workshops_num);
+    cout << "\nEfficiency:";
+    cout << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
+}
+
+void show_all(const Pipe& p, CS& cs) {
+
+    if (p.lenght != 0 && p.diam != 0 && p.status != -1) {
+        p_status(p.status);
+        cout << "\nPipe \nLenght: " << p.lenght << "\nDiameter: " << p.diam << endl;
+    }
+    else
+        cout << "\nThere is no pipe"<<endl;
+    if (cs.name != "" && cs.workshops_num != 0)
+        cout << "\nCS \nCS Name: " << cs.name << "\nNumber of workshops: " <<
+        cs.workshops_num << "\nWorkshops at work: " << cs.workshops_num_run <<
+        "\nEfficiency: " << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
+    else
+        cout << "\nThere is no CS"<< endl;
+}
+
 void save_file(const Pipe& p, const CS& cs)
 {
     //cs.efficiency = f_efficiency(wshops_run, wshops);
     ofstream output;
     output.open("output_info.txt");
-    output <<p.lenght <<"\n" <<p.diam<<"\n"<<p.status<<"\n"<< cs.name << "\n" << cs.workshops_num << "\n"<< cs.workshops_num_run << "\n"<< f_efficiency(cs.workshops_num_run, cs.workshops_num)<<"\n";
-    output.close();
-    cout << "\nData was successfully written to the file\n";
-}
-
-void option_3(float leng, float diamet, int sts,
-    string name_1, int w_shops, int w_shops_r) {
-    cout << "\nPipe \nLenght: " << leng << "\nDiameter: " << diamet << endl;
-    p_status(sts);
-    cout << "\n\nCS \nCS Name: " << name_1 << "\nNumber of workshops: " <<
-      w_shops << "\nWorkshops at work: " << w_shops_r <<
-      "\nEfficiency: " << f_efficiency(w_shops_r, w_shops) << "%\n";
+    if (output.is_open())
+    {
+        output << p.lenght << "\n" << p.diam << "\n" << p.status << "\n" << cs.name << "\n" << cs.workshops_num << "\n" << cs.workshops_num_run << "\n" << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "\n";
+        output.close();
+        cout << "\nData was successfully written to the file\n";
+    }
+    else
+        cout << "\nError!Failed to open file!";
 }
 
 void load_file(Pipe& p, CS& cs) {
@@ -111,6 +164,7 @@ void load_file(Pipe& p, CS& cs) {
     cs.workshops_num_run = stoi(line);
     getline(file_1, line);
     cs.efficiency = stof(line);
+    cout << "The data was successfully loaded from the file!";
 }
 
 
@@ -121,39 +175,20 @@ int main() {
         menu_choice();
         cin >> num_option;
         switch (num_option)     {
-        case 0: {
+        case 0: 
             return 0;
             break;
-        }
+        
         case 1: {
-                cout << "\n pipe lenght: ";
-                cin >> p.lenght;
-                p.lenght = checking(p.lenght);
-                cout << "\n pipe diameter: ";
-                cin >> p.diam;
-                p.diam = checking(p.diam);
-                cout << "\n Choose pipe status:\n 1.In repair\n 2.In work\n ";
-                cin >> p.status;
-                p.status = checking_status(p.status);
-                p_status(p.status);
-                break;
+            create_pipe(p);
+            break;
             }
         case 2: {
-                cout << "\nCS Name: ";
-                cin >> cs.name;
-                cout << "\nNumber of workshops:";
-                cin >> cs.workshops_num;
-                cs.workshops_num = checking(cs.workshops_num);
-                cout << "\nWorkshops at work: ";
-                cin >> cs.workshops_num_run;
-                cs.workshops_num_run = checking(cs.workshops_num_run);
-                cs.workshops_num_run = check_workshops(cs.workshops_num_run, cs.workshops_num);
-                cout << "\nEfficiency:";
-                cout << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
-                break;
+            create_cs(cs);
+            break;
             }
         case 3: {
-                option_3(p.lenght, p.diam, p.status, cs.name, cs.workshops_num, cs.workshops_num_run);
+                show_all(p, cs);
                 break;
             }
         case 4: {
@@ -174,7 +209,8 @@ int main() {
                 else {
                     cout << "\nNew number of workshops in work: \n";
                     cin >> cs.workshops_num_run;
-                    check_workshops(cs.workshops_num_run, cs.workshops_num);
+                    cs.workshops_num_run = check_work_shops(cs.workshops_num_run);
+                    check_working(cs.workshops_num_run, cs.workshops_num);
                 }
                 break;
             }
@@ -184,7 +220,6 @@ int main() {
             }
         case 7: {
                 load_file(p, cs);
-                cout << "The data was successfully loaded from the file!";
                 break;
             }
         default: {
