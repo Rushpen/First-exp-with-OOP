@@ -28,8 +28,9 @@ void p_status(bool status_p)
     }
 }
 
-float checking(float check_var)
+float checking()
 {
+    float check_var;
     while (((cin >> check_var).fail()) || (cin.peek() != '\n') || check_var <=0)
     {
         cout << "Error!\nInput another number!" << endl;
@@ -39,8 +40,9 @@ float checking(float check_var)
     return check_var;
 }
 
-int check_menu(int check_var)
+int check_menu()
 {
+    int check_var;
     while (((cin >> check_var).fail()) || (cin.peek() != '\n'))
     {
         cout << "\nERROR! Choose one of the options below!\n\n" << endl;
@@ -50,8 +52,9 @@ int check_menu(int check_var)
     return check_var;
 }
 
-bool checking_status(bool check_st)
+bool checking_status()
 {
+    bool check_st;
     while (((cin >> check_st).fail()) || (cin.peek() != '\n'))
     {
         cout << "Error!\nInput one of the predefined states:\n 0.In repair\n 1.In work\n ";
@@ -66,8 +69,9 @@ float f_efficiency(int work_num_run, int work_num)
     return (100 * (float(work_num_run) / float(work_num)));
 }
 
-int check_work_shops(int w)
+int check_work_shops()
 {
+    int w;
     while (((cin >> w).fail()) || (cin.peek() != '\n') || (w <= 0))
     {
         cout << "Error!\nInput another number!" << endl;
@@ -77,8 +81,9 @@ int check_work_shops(int w)
     return w;
 }
 
-int check_working(int work_run, int work)
+int check_working(int work)
 {
+    int work_run;
     while (((cin >> work_run).fail()) || (cin.peek() != '\n') || (work_run < 0) || (work_run>work))
     {
         cout << "Error!\nInput number of working shops not exceeding the total number of shops: \n";
@@ -90,11 +95,11 @@ int check_working(int work_run, int work)
 
 void create_pipe(Pipe& p) {
     cout << "\n pipe lenght: ";
-    p.lenght = checking(p.lenght);
+    p.lenght = checking();
     cout << "\n pipe diameter: ";
-    p.diam = checking(p.diam);
+    p.diam = checking();
     cout << "\n Choose pipe status:\n 0.In repair\n 1.In work\n ";
-    p.status = checking_status(p.status);
+    p.status = checking_status();
     p_status(p.status);
 }
 
@@ -104,9 +109,9 @@ void create_cs(CS& cs) {
     cin.ignore(INT_MAX, '\n');
     getline(cin, cs.name);
     cout << "\nNumber of workshops:";
-    cs.workshops_num = check_work_shops(cs.workshops_num);
+    cs.workshops_num = check_work_shops();
     cout << "\nWorkshops at work: ";
-    cs.workshops_num_run = check_working(cs.workshops_num_run, cs.workshops_num);
+    cs.workshops_num_run = check_working(cs.workshops_num);
     cout << "\nEfficiency:";
     cout << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
 }
@@ -133,7 +138,7 @@ void edit_pipe(Pipe& p) {
         cout << "\nThere is no pipe to change!" << endl;
     else {
         cout << "\nInput pipe status: \n";
-        p.status = checking_status(p.status);
+        p.status = checking_status();
         cout << "\nChanges accepted!" << endl;
     }
 }
@@ -143,7 +148,7 @@ void edit_cs(CS& cs) {
         cout << "\nThere is no CS to change!" << endl;
     else {
         cout << "\nNew number of workshops in work: \n";
-        cs.workshops_num_run = check_working(cs.workshops_num_run, cs.workshops_num);
+        cs.workshops_num_run = check_working(cs.workshops_num);
         cout << "\nChanges accepted!" << endl;
     }
 }
@@ -196,7 +201,7 @@ int main() {
     while (num_option) {
         cout << "\nChoose: \n 1.Create pipe  2.Create CS  3.Show all objects " <<
             " 4.Edit Pipe  5.Edit CS  6.Save  7.Load  0.Exit\n";
-        num_option = check_menu(num_option);
+        num_option = check_menu();
         switch (num_option)     {
         case 1: {
             create_pipe(P);
