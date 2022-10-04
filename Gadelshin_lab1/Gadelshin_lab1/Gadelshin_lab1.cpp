@@ -68,7 +68,7 @@ float f_efficiency(int work_num_run, int work_num)
 
 int check_work_shops(int w)
 {
-    while (((cin >> w).fail()) || (cin.peek() != '\n') || (w < 0))
+    while (((cin >> w).fail()) || (cin.peek() != '\n') || (w <= 0))
     {
         cout << "Error!\nInput another number!" << endl;
         cin.clear();
@@ -128,6 +128,26 @@ void show_all(const Pipe& p, CS& cs) {
         cout << "\nThere is no CS"<< endl;
 }
 
+void edit_pipe(Pipe& p) {
+    if (p.lenght == 0 || p.diam == 0)
+        cout << "\nThere is no pipe to change!" << endl;
+    else {
+        cout << "\nInput pipe status: \n";
+        p.status = checking_status(p.status);
+        cout << "\nChanges accepted!" << endl;
+    }
+}
+
+void edit_cs(CS& cs) {
+    if (cs.workshops_num == 0)
+        cout << "\nThere is no CS to change!" << endl;
+    else {
+        cout << "\nNew number of workshops in work: \n";
+        cs.workshops_num_run = check_working(cs.workshops_num_run, cs.workshops_num);
+        cout << "\nChanges accepted!" << endl;
+    }
+}
+
 void save_file(const Pipe& p, const CS& cs)
 {
     //cs.efficiency = f_efficiency(wshops_run, wshops);
@@ -175,7 +195,7 @@ int main() {
    int num_option(-1);
     while (num_option) {
         cout << "\nChoose: \n 1.Create pipe  2.Create CS  3.Show all objects " <<
-            " 4.Edit Pipe  5.Edit CS  6.Save  7.Load  8.Exit\n";
+            " 4.Edit Pipe  5.Edit CS  6.Save  7.Load  0.Exit\n";
         num_option = check_menu(num_option);
         switch (num_option)     {
         case 1: {
@@ -191,24 +211,11 @@ int main() {
                 break;
             }
         case 4: {
-                if (P.lenght == 0 || P.diam == 0)
-                    cout << "\nThere is no pipe to change!" << endl;
-                else  {
-                    cout << "\nInput pipe status: \n";
-                    P.status = checking_status(P.status);
-                    cout << "\nNew Pipe status: " << P.status;
-                    cout << "\nChanges accepted!" << endl;
-                }
+            edit_pipe(P);
                 break;
             }
         case 5: {
-                if (CS.workshops_num == 0)
-                    cout << "\nThere is no CS to change!" << endl;
-                else {
-                    cout << "\nNew number of workshops in work: \n";
-                    CS.workshops_num_run = check_work_shops(CS.workshops_num_run);
-                    check_working(CS.workshops_num_run, CS.workshops_num);
-                }
+            edit_cs(CS);
                 break;
             }
         case 6: {
