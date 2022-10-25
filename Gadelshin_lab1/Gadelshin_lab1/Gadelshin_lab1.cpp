@@ -1,20 +1,25 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+int pid = 0;
+int csid = 0;
 using namespace std;
 
-//Создание структур
-struct Pipe 
+
+struct CS
 {
+    std::string name = "";
+    int csid = 0, workshops_num = 0, workshops_num_run = 0;
+    float efficiency = 0;
+};
+
+struct Pipe
+{
+    int pid = 0;
     float lenght = 0;
     float diam = 0;
     bool status = false;
-};
-struct CS
-{
-    string name = "";
-    int workshops_num = 0, workshops_num_run = 0;
-    float efficiency = 0;
 };
 
 //Создание функций
@@ -94,6 +99,8 @@ int check_working(int work)
 }
 
 void create_pipe(Pipe& p) {
+    p.pid = ++pid;
+    cout << "\n Pipe index: "<<p.pid;
     cout << "\n pipe lenght: ";
     p.lenght = checking();
     cout << "\n pipe diameter: ";
@@ -104,6 +111,8 @@ void create_pipe(Pipe& p) {
 }
 
 void create_cs(CS& cs) {
+    cs.csid = ++csid;
+    cout << "\nCS index: " << cs.csid;
     cout << "\nCS Name: ";
     cin.clear();
     cin.ignore(INT_MAX, '\n');
@@ -116,19 +125,44 @@ void create_cs(CS& cs) {
     cout << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
 }
 
-void show_all(const Pipe& p, CS& cs) {
+int check_pipe_id(vector <Pipe>& g) {
+    int x;
+    while (((cin >> x).fail()) || (cin.peek() != '\n') || (x < 0) || (x > g.size())) {
+        cout << "Error!!! Input integer numeric index of existing pipe > 0" << endl;
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+    }
+    return x;
+}
+int check_cs_id(vector <CS>& g) {
+    int x;
+    while (((cin >> x).fail()) || (cin.peek() != '\n') || (x < 0) || (x > g.size())) {
+        cout << "Error!!! Input integer numeric index of existing CS > 0" << endl;
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+    }
+    return x;
+}
 
-    if (p.lenght != 0 && p.diam != 0) {
-        p_status(p.status);
-        cout << "\nPipe \nLenght: " << p.lenght << "\nDiameter: " << p.diam << endl;
-        p_status(p.status);
+void show_all(vector <Pipe>& p_g, vector<CS>& cs_g) {
+
+    if (p_g.size() !=0) 
+    {
+        for (int i = 0; i < p_g.size(); i++) {
+            cout << "\nPipe: \nIndex: " << p_g[i].pid << "\nLenght: " << p_g[i].lenght << "\nDiameter: " << p_g[i].diam << endl;
+            p_status(p_g[i].status);
+        }
     }
     else
         cout << "\nThere is no pipe"<<endl;
-    if (cs.name != "" && cs.workshops_num != 0)
-        cout << "\nCS \nCS Name: " << cs.name << "\nNumber of workshops: " <<
-        cs.workshops_num << "\nWorkshops at work: " << cs.workshops_num_run <<
-        "\nEfficiency: " << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
+    if (cs_g.size() != 0)
+    {
+        for (int i = 0; i<cs_g.size(); i++){
+            cout << "\nCS index: "<< cs_g[i].csid << "\nCS Name : " << cs_g[i].name << "\nNumber of workshops : " <<
+                cs_g[i].workshops_num << "\nWorkshops at work: " << cs_g[i].workshops_num_run <<
+                "\nEfficiency: " << f_efficiency(cs_g[i].workshops_num_run, cs_g[i].workshops_num) << "%\n";
+        }
+    }
     else
         cout << "\nThere is no CS"<< endl;
 }
@@ -194,9 +228,23 @@ void load_file(Pipe& p, CS& cs) {
         cout << "\nError!Failed to open file!";
 }
 
+Pipe& pipe_select(vector <Pipe>& g) {
+    cout << "Enter index of pipe ";
+    int id = check_pipe_id(g);
+    return g[id - 1];
+
+}
+CS& cs_select(vector <CS>& g) {
+    cout << "Enter index of pipe:  ";
+    int id = check_cs_id(g);
+    return g[id - 1];
+
+}
+
 
 int main() {
-   Pipe P; CS CS;
+    vector <Pipe> pipe_group;
+    vector <CS> cs_group;
    int num_option(-1);
     while (num_option) {
         cout << "\nChoose: \n 1.Create pipe  2.Create CS  3.Show all objects " <<
@@ -204,24 +252,28 @@ int main() {
         num_option = check_menu();
         switch (num_option)     {
         case 1: {
+            Pipe P;
             create_pipe(P);
+            pipe_group.push_back(P);
             break;
             }
         case 2: {
-            create_cs(CS);
+            CS cs;
+            create_cs(cs);
+            cs_group.push_back(cs);
             break;
             }
         case 3: {
-                show_all(P, CS);
+                show_all(pipe_group, cs_group);
                 break;
             }
-        case 4: {
+        /**case 4: {
             edit_pipe(P);
-                break;
+            break;
             }
         case 5: {
             edit_cs(CS);
-                break;
+            break;
             }
         case 6: {
                 save_file(P, CS);
@@ -230,7 +282,7 @@ int main() {
         case 7: {
                 load_file(P, CS);
                 break;
-            }
+            }**/
         case 0: {
             return 0;
             break;
