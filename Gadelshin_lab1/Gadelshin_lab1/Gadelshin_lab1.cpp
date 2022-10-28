@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+
 int pid = 0;
 int csid = 0;
 bool ed = 0;
@@ -63,7 +64,7 @@ int check_menu()
 
 int check_pid(unordered_map<int, Pipe>& p_map) {
     int c;
-    while (((cin >> c).fail()) || (cin.peek() != '\n') || c <= 0 || c > p_map.max_size())
+    while (((cin >> c).fail()) || (cin.peek() != '\n') || c <= 0 || (!p_map.contains(c)))
     {
         cout << "Error!\nInput another index" << endl;
         cin.clear();
@@ -74,7 +75,7 @@ int check_pid(unordered_map<int, Pipe>& p_map) {
 
 int check_csid(unordered_map<int, CS>& cs_map) {
     int c;
-    while (((cin >> c).fail()) || (cin.peek() != '\n') || c <= 0 || c > cs_map.max_size())
+    while (((cin >> c).fail()) || (cin.peek() != '\n') || c <= 0 || (!cs_map.contains(c)))
     {
         cout << "Error!\nInput another index" << endl;
         cin.clear();
@@ -167,30 +168,32 @@ void create_cs(CS& cs) {
     cout << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "%\n";
 }
 
-void show_all(unordered_map <int, Pipe>& p_map, unordered_map <int, CS>& cs_map) {
-    
-    for (auto pipe : p_map) {
-        if (pipe.second.lenght != 0) {
-            cout << "\nPipe "<<pipe.first<<"\nname: " << pipe.second.name << "\nlenght: " 
-                << pipe.second.lenght << "\ndiameter: " << pipe.second.diam << endl;
-            p_status(pipe.second.status);
+void show_all(unordered_map <int, Pipe>& p_map, unordered_map <int, CS>& cs_map) 
+{
+        if (p_map.size()!=0) {
+            for (auto pipe : p_map) {
+                cout << "\nPipe " << pipe.first << "\nname: " << pipe.second.name << "\nlenght: "
+                    << pipe.second.lenght << "\ndiameter: " << pipe.second.diam << endl;
+                p_status(pipe.second.status);
+            }
         }
         else
             cout << "There is no pipe" << endl;
-    }
-    for (auto cs : cs_map) {
-        if (cs.second.workshops_num != 0) {
-            cout << "\nCS "<<cs.first<<"\nname: " << cs.second.name << "\nnumber of workshops: " 
-                << cs.second.workshops_num << "\nworkshops at work: " << cs.second.workshops_num_run << endl;
-            cout <<"efficiency: "<< f_efficiency(cs.second.workshops_num_run, cs.second.workshops_num) << "%" << endl;
+
+        if (cs_map.size() != 0) {
+            for (auto cs : cs_map) {
+                cout << "\nCS " << cs.first << "\nname: " << cs.second.name << "\nnumber of workshops: "
+                    << cs.second.workshops_num << "\nworkshops at work: " << cs.second.workshops_num_run << endl;
+                cout << "efficiency: " << f_efficiency(cs.second.workshops_num_run, cs.second.workshops_num) << "%" << endl;
+            }
         }
         else
-            cout << "There is no CS" << endl;
-    }
-    }
+            cout << "\nThere is no CS" << endl;
+ }
 
 void edit_pipe(unordered_map <int, Pipe>& p_map, int pid) {
     bool a;
+    if (p_map.size() != 0) {
         cout << "\nChange: 1.Edit one pipe  0.Delete pipe" << endl;
         ed = check_edit();
         cout << "Enter index of pipe: ";
@@ -206,34 +209,54 @@ void edit_pipe(unordered_map <int, Pipe>& p_map, int pid) {
             auto pipe = p_map.find(pid);
             p_map.erase(pipe);
         }
+    }
+    else
+        cout << "There is no Pipe for edit!!"<<endl;
 }
 
 void edit_cs(unordered_map<int, CS>& cs_map, int csid) {
-    int b;
-    cout << "\nChange: 1.Edit one CS  0.Delete CS" << endl;
-    ed = check_edit();
-    cout << "Enter index of CS: ";
-    csid = check_csid(cs_map);
-    if (ed == 1) {
-        cout << "\n Input new number of workshops at work: \n ";
-        auto cs = cs_map.find(csid);
-        b = check_working(cs_map.at(csid).workshops_num);
-        cs_map.at(csid).workshops_num_run = b;
+    int b, c;
+    if (cs_map.size() != 0)
+    {
+        cout << "\nChange: 1.Edit one CS  0.Delete CS" << endl;
+        ed = check_edit();
+        cout << "Enter index of CS: ";
+        csid = check_csid(cs_map);
+        if (ed == 1) {
+            cout << "\n Input new number of workshops at work: \n ";
+            auto cs = cs_map.find(csid);
+            c = cs_map.at(csid).workshops_num;
+            b = check_working(c);
+            cs_map.at(csid).workshops_num_run = b;
+        }
+        else {
+            auto cs = cs_map.find(csid);
+            cs_map.erase(cs);
+        }
     }
-    else {
-        auto cs = cs_map.find(csid);
-        cs_map.erase(cs);
-    }
+    else
+        cout << "There is no CS for edit!"<<endl;
 }
 
-void save_file(const Pipe& p, const CS& cs)
+void save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map)
 {
-    //cs.efficiency = f_efficiency(wshops_run, wshops);
+    string f_n;
+    cout << "Input filename: ";
+    cin >> f_n;
     ofstream output;
-    output.open("output_info.txt");
+    output.open(f_n + ".txt");
     if (output.is_open())
     {
-        output << p.lenght << "\n" << p.diam << "\n" << p.status << "\n" << cs.name << "\n" << cs.workshops_num << "\n" << cs.workshops_num_run << "\n" << f_efficiency(cs.workshops_num_run, cs.workshops_num) << "\n";
+        output << p_map.size() << endl << cs_map.size() << endl;
+
+        for (auto pipe : p_map) {
+            output <<pipe.first<<"\n" << pipe.second.name << "\n" << pipe.second.lenght
+            << "\n" << pipe.second.diam << "\n" << pipe.second.status << "\n";
+        }
+        for (auto cs : cs_map) {
+            output<< cs.first << "\n"<< cs.second.name << "\n" << cs.second.workshops_num << "\n" << cs.second.workshops_num_run
+             << "\n" << f_efficiency(cs.second.workshops_num_run, cs.second.workshops_num) << "\n";
+        }
         output.close();
         cout << "\nData was successfully written to the file\n";
     }
@@ -241,32 +264,30 @@ void save_file(const Pipe& p, const CS& cs)
         cout << "\nError!Failed to open file!";
 }
 
-void load_file(Pipe& p, CS& cs) {
-    ifstream file_1;
-    string line;
-    file_1.open("output_info.txt");
-    if (file_1.is_open()) 
-    {
-        getline(file_1, line);
-        p.lenght = stof(line);
-        getline(file_1, line);
-        p.diam = stof(line);
-        getline(file_1, line);
-        p.status = stoi(line);
-        getline(file_1, line);
-        cs.name = line;
-        getline(file_1, line);
-        cs.workshops_num = stoi(line);
-        getline(file_1, line);
-        cs.workshops_num_run = stoi(line);
-        getline(file_1, line);
-        cs.efficiency = stof(line);
-        cout << "The data was successfully loaded from the file!";
-    }
-    else 
-        cout << "\nError!Failed to open file!";
-}
 
+void load_file(ifstream& fin, unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map)
+{
+    int a, b, i;
+    Pipe p;
+    CS cs;
+        fin >> a;
+        fin >> b;
+        for (i = 0; i < a; ++i) {
+            fin >> p.pid;
+            fin.ignore();
+            getline(fin, p.name);
+            fin >> p.lenght >> p.diam >> p.status;
+            p_map[p.pid] = p;
+        }
+        for (i = 0; i < b; ++i) {
+            fin >> cs.csid;
+            fin.ignore();
+            getline(fin, cs.name);
+            fin >> cs.workshops_num >> cs.workshops_num_run >> cs.efficiency;
+            cs_map[cs.csid] = cs;
+        }
+        cout << "The data was successfully loaded from the file!";
+}
 
 
 int main() {
@@ -302,15 +323,25 @@ int main() {
             edit_cs(cs_map, csid );
             break;
             }
-        /**case 6: {
-                save_file(P, CS);
+        case 6: {
+                save_file(pipe_map, cs_map);
                 break;
             }
         case 7: {
-                load_file(P, CS);
-                break;
-            }**/
-        case 0: {
+            ifstream fin;
+            string f_n;
+            cout << "Input name of file: ";
+            cin >> f_n;
+            fin.open(f_n+".txt");
+            if (fin.is_open()) {
+                load_file(fin, pipe_map, cs_map);
+            }
+            else
+                cout << "\nError!Failed to open file!";
+                fin.close();
+            break;
+           }
+        case 0:{
             return 0;
             break;
         }
