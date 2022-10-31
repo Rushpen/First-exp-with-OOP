@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <unordered_map>
 using namespace std;
 
 
@@ -23,4 +24,16 @@ T get_correct(T min, T max) {
         cin.ignore(INT_MAX, '\n');
     }
     return a;
+}
+
+template <typename T>
+int id_check(unordered_map<int, T> id_map) {
+    int b = 0;
+    while (((cin >> b).fail()) || (cin.peek() != '\n') || (b <= 0) || (!id_map.contains(b)))
+    {
+        cout << "Error!\nInput normal index!" << endl;
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+    }
+    return b;
 }

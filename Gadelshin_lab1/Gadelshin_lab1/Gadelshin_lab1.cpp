@@ -5,25 +5,22 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "Utils.h"
-
-int pid = 0;
-int csid = 0;
-int ed = 0;
 using namespace std;
 
 class Pipe
 {
 public:
     string name = "";
+    bool status = false;
     int pid = 0;
     float lenght = 0;
     float diam = 0;
-    bool status = false;
 
     friend istream& operator >> (istream& in, Pipe& p);
     friend ostream& operator << (ostream& out, Pipe& p);
     friend ofstream& operator << (ofstream& fcout, Pipe& p);
     friend ifstream& operator >> (ifstream& fcin, Pipe& p);
+
 };
 
 class CS
@@ -39,8 +36,8 @@ public:
     friend ifstream& operator >> (ifstream& fcin, CS& cs);
 };
 
+int pid = 0, csid = 0;
 
-//Создание функций
 void p_status(bool status_p)
 {
     if (status_p == false) {
@@ -49,52 +46,6 @@ void p_status(bool status_p)
     else {
         cout << "status: Pipe is ready for operation\n";
     }
-}
-
-int check_menu()
-{
-    int check_var;
-    while (((cin >> check_var).fail()) || (cin.peek() != '\n'))
-    {
-        cout << "\nERROR! Choose one of the options below!\n\n" << endl;
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-    }
-    return check_var;
-}
-
-int check_pid(unordered_map<int, Pipe>& p_map) {
-    int c;
-    while (((cin >> c).fail()) || (cin.peek() != '\n') || c <= 0 || (!p_map.contains(c)))
-    {
-        cout << "Error!\nInput another index" << endl;
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-    }
-    return c;
-}
-
-int check_csid(unordered_map<int, CS>& cs_map) {
-    int c;
-    while (((cin >> c).fail()) || (cin.peek() != '\n') || c <= 0 || (!cs_map.contains(c)))
-    {
-        cout << "Error!\nInput another index" << endl;
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-    }
-    return c;
-}
-
-int check_working(int work)
-{
-    int work_run;
-    while (((cin >> work_run).fail()) || (cin.peek() != '\n') || (work_run < 0) || (work_run>work))
-    {
-        cout << "Error!\nInput number of working shops not exceeding the total number of shops: \n";
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-    }
-    return work_run;
 }
 
 unordered_set <int> filter_pipe(unordered_map <int, Pipe>& p_map) {
@@ -127,30 +78,13 @@ unordered_set <int> filter_pipe(unordered_map <int, Pipe>& p_map) {
         if (v_id.size() == 0)
             cout << "\nThere are no such pipes!" << endl;
     }
+    else
+        cout << "\nPipes not yet avalaible or have been deleted" << endl;
 
     for (auto& v : v_id)
         cout << p_map.at(v);
     return v_id;
 }
-
-void show_pipe(unordered_map <int, Pipe>& p_map) {
-    if (p_map.size()!=0) {
-        for (auto p_m : p_map) 
-            cout << p_m.second;
-    }
-    else
-        cout << "\nThere is no pipe!"<<endl;
-}
-
-void show_cs(unordered_map<int, CS>& cs_map) {
-    if (cs_map.size() != 0) {
-        for (auto cs_m : cs_map)
-            cout << cs_m.second;
-    }
-    else
-        cout << "\nThere is no CS!" << endl;
-}
-
 unordered_set <int> CS_filter(unordered_map<int, CS>& cs_map) {
     int a;
     unordered_set<int> new_cs;
@@ -184,23 +118,42 @@ unordered_set <int> CS_filter(unordered_map<int, CS>& cs_map) {
         if (new_cs.size() == 0)
             cout << "\nThere are no such CSs!" << endl;
     }
+    else
+        cout << "\nCSs not yet avalaible or have been deleted" << endl;
     for (auto& v : new_cs)
         cout << cs_map[v];
     return new_cs;
 }
 
+void show_pipe(unordered_map <int, Pipe>& p_map) {
+    if (p_map.size()!=0) {
+        for (auto p_m : p_map) 
+            cout << p_m.second;
+    }
+    else
+        cout << "\nThere is no pipe!"<<endl;
+}
+void show_cs(unordered_map<int, CS>& cs_map) {
+    if (cs_map.size() != 0) {
+        for (auto cs_m : cs_map)
+            cout << cs_m.second;
+    }
+    else
+        cout << "\nThere is no CS!" << endl;
+}
+
 void edit_pipe(unordered_map <int, Pipe>& p_map, int pid) {
     bool a, d;
+    int ed;
     unordered_set<int>ids;
     if (p_map.size() != 0) {
         cout << "\nChange: 1.Edit one pipe  2.Edit pipes  0.Delete pipe" << endl;
         ed = get_correct(0 , 2);
         if (ed == 1) {
             cout << "Input index of pipe: " << endl;
-            pid = check_pid(p_map);
+            pid = id_check(p_map);
             cout << "\n Choose new pipe status:\n 0.In repair\n 1.In work\n ";
-            cin >> a;
-            p_status(a);
+            a = get_correct(0, 1);
             auto pipe = p_map.find(pid);
             p_map.at(pid).status = a;
             cout << "Changes applied!" << endl;
@@ -214,15 +167,14 @@ void edit_pipe(unordered_map <int, Pipe>& p_map, int pid) {
                 n = get_correct(1, int (p_map.size()));
                 cout << "Input numbers of pipes: " << endl;
                 for (int i = 0; i < n; ++i) {
-                    z = get_correct(1, int(p_map.size() - 1));
+                    z = get_correct(1, int(p_map.size()));
                     if (p_map.find(z) != p_map.end())
                         ids.insert(z);
                 }
                 cout << "\nInput new status of pipes (0 if repairing, 1 if works)" << endl;
-                bool st;
-                st = get_correct(0, 1);
+                a = get_correct(0, 1);
                 for (auto& i : ids)
-                    p_map.at(i).status = st;
+                    p_map.at(i).status = a;
                 cout << "\nChanges applied!" << endl;
             }
             if (d == 1) {
@@ -236,7 +188,7 @@ void edit_pipe(unordered_map <int, Pipe>& p_map, int pid) {
         }
         else if (ed == 0){
             cout << "Input index of pipe: " << endl;
-            pid = check_pid(p_map);
+            pid = id_check(p_map);
             auto pipe = p_map.find(pid);
             p_map.erase(pipe);
             cout << "\nPipe deleted" << endl;
@@ -245,9 +197,8 @@ void edit_pipe(unordered_map <int, Pipe>& p_map, int pid) {
     else
         cout << "There is no Pipe for edit!"<<endl;
 }
-
 void edit_cs(unordered_map<int, CS>& cs_map, int csid) {
-    int b;
+    int b, ed;
     bool d;
     unordered_set<int>idcs;
     if (cs_map.size() != 0)
@@ -256,7 +207,7 @@ void edit_cs(unordered_map<int, CS>& cs_map, int csid) {
         ed = get_correct(0, 2);
         if (ed == 1) {
             cout << "Enter index of CS: ";
-            csid = check_csid(cs_map);
+            csid = id_check(cs_map);
             cout << "\n Input new number of workshops at work: \n ";
             auto cs = cs_map.find(csid);
             b = get_correct(0, cs_map.at(csid).workshops_num);
@@ -294,7 +245,7 @@ void edit_cs(unordered_map<int, CS>& cs_map, int csid) {
 
         else if (ed == 0){
             cout << "Enter index of CS: ";
-            csid = check_csid(cs_map);
+            csid = id_check(cs_map);
             auto cs = cs_map.find(csid);
             cs_map.erase(cs);
             cout << "\nCS deleted" << endl;
@@ -326,7 +277,6 @@ void save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map)
     else
         cout << "\nError!Failed to open file!";
 }
-
 void load_file(unordered_map <int, Pipe>&p_map, unordered_map<int, CS>&cs_map )
 {
     int i;
@@ -343,11 +293,11 @@ void load_file(unordered_map <int, Pipe>&p_map, unordered_map<int, CS>&cs_map )
         fcin >> pid;
         fcin >> csid;
         for (i = 0; i < pid; ++i) {
-            fcin >> p;
+            fcin>>p;
             p_map.insert({p.pid, p });
         }
         for (i = 0; i < csid; ++i) {
-            fcin >> cs;
+            fcin>>cs;
             cs_map.insert({cs.csid, cs });
         }
         cout << "The data was successfully loaded from the file!";
@@ -365,7 +315,7 @@ int main() {
     while (num_option) {
         cout << "\nChoose: \n 1.Create pipe 2.Create CS 3.Show all objects" <<
             " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter pipe 9.Filter CS 0.Exit\n";
-        num_option = check_menu();
+        checking(num_option);
         switch (num_option)     {
         case 1: {
             Pipe P;
@@ -466,7 +416,7 @@ istream& operator >> (istream& in, CS& cs) {
     cout << "\nNumber of workshops:";
     checking(cs.workshops_num);
     cout << "\nWorkshops at work: ";
-    cs.workshops_num_run = check_working(cs.workshops_num);
+    cs.workshops_num_run = get_correct(0, cs.workshops_num);
     cout << "\nEfficiency(0-100):"<<endl;
     cs.efficiency = get_correct(0 , 100);
     return in;
