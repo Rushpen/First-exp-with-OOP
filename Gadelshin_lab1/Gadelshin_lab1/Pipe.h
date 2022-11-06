@@ -26,6 +26,7 @@ public:
     void p_status(bool status);
     unordered_set <int> filter_pipe(unordered_map <int, Pipe>& p_map);
     void edit_pipe(unordered_map <int, Pipe>& p_map);
+    void delete_pipes(unordered_map <int, Pipe>& p_map);
 
     friend istream& operator >> (istream& in, Pipe& p);
     friend ostream& operator << (ostream& out, Pipe& p);

@@ -26,6 +26,7 @@ public:
     void show_cs(unordered_map<int, CS>& cs_map);
     unordered_set <int> Cs_filter(unordered_map<int, CS>& cs_map);
     void edit_cs(unordered_map<int, CS>& cs_map);
+    void delete_css(unordered_map<int, CS>& cs_map);
 
     friend istream& operator >> (istream& in, CS& cs);
     friend ostream& operator << (ostream& out, CS& cs);

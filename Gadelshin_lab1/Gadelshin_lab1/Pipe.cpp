@@ -1,4 +1,3 @@
-#include <string>
 #include "Pipe.h"
 #include "Utils.h"
 
@@ -128,18 +127,57 @@ void Pipe::edit_pipe(unordered_map <int, Pipe>& p_map) {
             }
         }
         else if (ed == 0) {
-            cout << "Input index of pipe: " << endl;
-            id = id_check(p_map);
-            auto pipe = p_map.find(id);
-            p_map.erase(pipe);
-            cout << "\nPipe deleted" << endl;
+            delete_pipes(p_map);
         }
     }
     else
         cout << "There is no Pipe for edit!" << endl;
 }
 
-istream& operator >> (istream& in, Pipe& p) {
+void Pipe::delete_pipes(unordered_map <int, Pipe>& p_map) {
+    int id, h;
+    bool ed;
+    unordered_set<int>ids;
+    cout << "Delete: 0.One pipe  1.Pipes" << endl;
+    ed = get_correct(0, 1);
+    if (ed == 0) {
+        cout << "Input index of pipe: " << endl;
+        id = id_check(p_map);
+        auto pipe = p_map.find(id);
+        p_map.erase(pipe);
+        cout << "\nPipe deleted" << endl;
+    }
+    if (ed == 1) {
+        bool a;
+        cout << "0.By ids  1.By filter" << endl;
+        h = get_correct(0, 1);
+        if (h == 0) {
+            int n, z;
+            cout << "How many pipes you want to delete?" << endl;
+            n = get_correct(1, int(p_map.size()));
+                cout << "Input numbers of pipes: " << endl;
+                for (int i = 0; i < n; ++i) {
+                    z = get_correct(1, int(p_map.size()));
+                    if (p_map.find(z) != p_map.end())
+                        ids.insert(z);
+            }
+            for (auto& i : ids)
+                p_map.erase(i);
+            cout << "\nPipes were deleted!" << endl;
+        }
+        if (h == 1) {
+            ids = filter_pipe(p_map);
+            if (ids.size() != 0) {
+                for (auto& i : ids)
+                    p_map.erase(i);
+                cout << "\nPipes were deleted!" << endl;
+            }
+        }
+    }
+}
+
+istream& operator >> (istream& in, Pipe& p) 
+{
     cout << "\nIndex: " << p.up_pid();
     cout << "\nName: ";
     cin.clear();

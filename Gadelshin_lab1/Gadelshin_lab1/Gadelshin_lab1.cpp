@@ -1,9 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
-#include <string>
-#include <vector>
 #include <unordered_map>
-#include <unordered_set>
 #include "Pipe.h"
 #include "CS.h"
 #include "Utils.h"
@@ -75,7 +72,7 @@ int main() {
         cout << "\nChoose: \n 1.Create pipe 2.Create CS 3.Show all objects" <<
             " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter pipe 9.Filter CS 10.Exit\n";
         checking(num_option);
-        switch (num_option)     {
+        switch (num_option)    {
         case 1: {
             cin >> P;
             pipe_map.insert({P.get_pid(), P });
@@ -105,6 +102,8 @@ int main() {
             }
         case 7: {
             load_file(pipe_map, cs_map);
+            P.max_id = pipe_map.size();
+            cs.max_idd = cs_map.size();
             break;
            }
         case 8: {

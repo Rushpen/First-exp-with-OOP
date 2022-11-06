@@ -129,15 +129,53 @@ void CS::edit_cs(unordered_map<int, CS>& cs_map) {
         }
 
         else if (ed == 0) {
-            cout << "Enter index of CS: ";
-            id = id_check(cs_map);
-            auto cs = cs_map.find(id);
-            cs_map.erase(cs);
-            cout << "\nCS deleted" << endl;
+            delete_css(cs_map);
         }
     }
     else
         cout << "There is no CS for edit!" << endl;
+}
+
+void CS::delete_css(unordered_map<int, CS>& cs_map) {
+    int id, h;
+    bool ed;
+    unordered_set<int>ids;
+    cout << "Delete: 0.One cs  1.CSs" << endl;
+    ed = get_correct(0, 1);
+    if (ed == 0) {
+        cout << "Input index of CS: " << endl;
+        id = id_check(cs_map);
+        auto pipe = cs_map.find(id);
+        cs_map.erase(pipe);
+        cout << "\nPipe deleted" << endl;
+    }
+    if (ed == 1) {
+        bool a;
+        cout << "0.By ids  1.By filter" << endl;
+        h = get_correct(0, 1);
+        if (h == 0) {
+            int n, z;
+            cout << "How many pipes you want to delete?" << endl;
+            n = get_correct(1, int(cs_map.size()));
+            cout << "Input numbers of CSs: " << endl;
+            for (int i = 0; i < n; ++i) {
+                z = get_correct(1, int(cs_map.size()));
+                if (cs_map.find(z) != cs_map.end())
+                    ids.insert(z);
+            }
+            for (auto& i : ids)
+                cs_map.erase(i);
+            cout << "\nCSs were deleted!" << endl;
+        }
+        if (h == 1) {
+            ids = Cs_filter(cs_map);
+            if (ids.size() != 0) {
+                for (auto& i : ids)
+                    cs_map.erase(i);
+                cout << "\nCSs were deleted!" << endl;
+            }
+        }
+    }
 }
 
 istream& operator >> (istream& in, CS& cs) {
