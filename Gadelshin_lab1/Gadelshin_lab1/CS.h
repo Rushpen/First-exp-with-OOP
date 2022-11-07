@@ -24,9 +24,8 @@ public:
     int get_w_r();
     void set_w_r(int a);
     void show_cs(unordered_map<int, CS>& cs_map);
-    unordered_set <int> Cs_filter(unordered_map<int, CS>& cs_map);
-    void edit_cs(unordered_map<int, CS>& cs_map);
-    void delete_css(unordered_map<int, CS>& cs_map);
+
+    float cs_unused();
 
     friend istream& operator >> (istream& in, CS& cs);
     friend ostream& operator << (ostream& out, CS& cs);
