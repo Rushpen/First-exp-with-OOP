@@ -6,29 +6,9 @@ using namespace std;
 
 int CS::max_idd = 0;
 
-int CS::get_csid() { 
-	return csid; 
-}
-int CS::up_csid() {
-    return csid = ++max_idd;
-}
-void CS::set_csid(int i) {
-	csid = i; 
-}
-int CS::get_w() {
-	return workshops_num; 
-}
-int CS::get_w_r() { 
-	return workshops_num_run; 
-}
-void CS::set_w_r(int a) {
-	workshops_num_run = a; 
-}
-
 float CS::cs_unused() {
     return ((workshops_num - workshops_num_run) * 100 / (workshops_num));
 }
-
 void CS::show_cs(unordered_map<int, CS>& cs_map) {
     if (cs_map.size() != 0) {
         for (auto cs_m : cs_map)

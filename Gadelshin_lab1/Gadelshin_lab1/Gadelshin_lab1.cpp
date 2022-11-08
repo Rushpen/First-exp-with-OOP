@@ -66,12 +66,12 @@ bool check_p_status(Pipe& p, bool status) {
     return (p.get_stat() == status);
 }
 
-bool check_p_name(Pipe& Pp, string nam) {
-    return (Pp.name.find(nam) != string::npos);
+bool check_p_name(Pipe& Pp, string p_name) {
+    return (Pp.name.find(p_name) != string::npos);
 }
 
-bool check_cs_name(CS& cs, string nam) {
-    return (cs.name.find(nam) != string::npos);
+bool check_cs_name(CS& cs, string cs_name) {
+    return (cs.name.find(cs_name) != string::npos);
 }
 
 bool check_unused(CS& cs, float n) {
@@ -87,7 +87,9 @@ unordered_set <int> search_pipes(unordered_map <int, Pipe>& p_map) {
         if (a == 0) {
             string n;
             cout << "Input name: " << endl;
-            cin >> n;
+            cin.clear();
+            cin.ignore(INT_MAX, '\n');
+            getline(cin, n);
             v_id = search_p(p_map, check_p_name, n);
         }
         if (a == 1) {
@@ -226,7 +228,9 @@ unordered_set <int> search_Css(unordered_map<int, CS>& cs_map) {
         {
             string n;
             cout << "Input name: " << endl;
-            cin >> n;
+            cin.clear();
+            cin.ignore(INT_MAX, '\n');
+            getline(cin, n);
             new_cs = search_cs(cs_map, check_cs_name, n);
         }
         else if (a == 1)

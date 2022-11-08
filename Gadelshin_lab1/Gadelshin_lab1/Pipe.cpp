@@ -5,22 +5,6 @@ using namespace std;
 
 int Pipe::max_id = 0;
 
-int Pipe::get_pid() {
-    return pid; 
-}
-int Pipe::up_pid() {
-    return pid = ++max_id;
-}
-void Pipe::set_pid(int i) {
-    pid = i;
-}
-bool Pipe::get_stat() {
-    return status;
-}
-void Pipe::set_stat(bool a) {
-    status = a; 
-}
-
 void Pipe::p_status(bool status_p)
 {
     if (status_p == false) {

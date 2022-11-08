@@ -14,15 +14,14 @@ private:
     int workshops_num, workshops_num_run;
     float efficiency;
 public:
-    std::string name = "";
+    string name = "";
     static int max_idd;
-
-    int get_csid();
-    int up_csid();
-    void set_csid(int i);
-    int get_w();
-    int get_w_r();
-    void set_w_r(int a);
+    int get_csid() { return csid; }
+    int up_csid() { return csid = ++max_idd; }
+    void set_csid(int i) { csid = i; }
+    int get_w() { return workshops_num; }
+    int get_w_r() { return workshops_num_run; }
+    void set_w_r(int a) { workshops_num_run = a; }
     void show_cs(unordered_map<int, CS>& cs_map);
 
     float cs_unused();

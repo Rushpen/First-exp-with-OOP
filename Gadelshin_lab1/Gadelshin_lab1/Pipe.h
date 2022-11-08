@@ -16,12 +16,11 @@ private:
 public:
     string name = "";
     static int max_id;
-
-    int get_pid();
-    int up_pid();
-    void set_pid(int i);
-    bool get_stat();
-    void set_stat(bool a);
+    int get_pid() { return pid; }
+    int up_pid() { return pid = ++max_id; }
+    void set_pid(int i) { pid = i; }
+    void set_stat(bool a) { status = a; }
+    bool get_stat() { return status; }
 
     void show_pipe(unordered_map <int, Pipe>& p_map);
     void p_status(bool status);
@@ -30,6 +29,5 @@ public:
     friend ostream& operator << (ostream& out, Pipe& p);
     friend ofstream& operator << (ofstream& fcout, Pipe& p);
     friend ifstream& operator >> (ifstream& fcin, Pipe& p);
-
 };
 

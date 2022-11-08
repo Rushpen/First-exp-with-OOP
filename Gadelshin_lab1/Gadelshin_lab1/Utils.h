@@ -22,7 +22,7 @@ T get_correct(T min, T max) {
     T a = 0;
     while (((cin >> a).fail()) || (cin.peek() != '\n') || (a < min) || (a> max))
     {
-        cout << "Error!\nInput number that >"<<min<<" and <"<< max<< endl;
+        cout << "Error!\nInput number that >="<<min<<" and =<"<< max<< endl;
         cin.clear();
         cin.ignore(INT_MAX, '\n');
     }
