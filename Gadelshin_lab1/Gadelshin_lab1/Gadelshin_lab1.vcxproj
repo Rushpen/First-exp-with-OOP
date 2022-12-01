@@ -142,10 +142,12 @@
   <ItemGroup>
     <ClCompile Include="CS.cpp" />
     <ClCompile Include="Gadelshin_lab1.cpp" />
+    <ClCompile Include="Gas_transport.cpp" />
     <ClCompile Include="Pipe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CS.h" />
+    <ClInclude Include="Gas_transport.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>

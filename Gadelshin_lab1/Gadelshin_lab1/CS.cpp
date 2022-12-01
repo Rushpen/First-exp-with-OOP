@@ -7,7 +7,7 @@ using namespace std;
 int CS::max_idd = 0;
 
 float CS::cs_unused() {
-    return ((workshops_num - workshops_num_run) * 100 / (workshops_num));
+    return ((float(workshops_num) - float(workshops_num_run)) * 100 / float(workshops_num));
 }
 void CS::show_cs(unordered_map<int, CS>& cs_map) {
     if (cs_map.size() != 0) {

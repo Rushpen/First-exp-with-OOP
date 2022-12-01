@@ -44,6 +44,15 @@ int id_check(unordered_map<int, T> id_map) {
 template <typename T>
 using filter_p = bool (*) (Pipe& p, T par);
 
+template <typename T>
+ostream& operator<< (ostream& out, unordered_map <int, T>& p) {
+    out << "Available Ids: ";
+    for (auto& [i, obj] : p) {
+        out << i << " ";
+    }
+    out << endl;
+    return out;
+}
 
 template <typename T>
 unordered_set <int> search_p(unordered_map <int, Pipe>& pipe_group, filter_p<T> f, T par) {

@@ -21,6 +21,7 @@ public:
     void set_pid(int i) { pid = i; }
     void set_stat(bool a) { status = a; }
     bool get_stat() { return status; }
+    int get_diam() { return diam; }
 
     void show_pipe(unordered_map <int, Pipe>& p_map);
     void p_status(bool status);
