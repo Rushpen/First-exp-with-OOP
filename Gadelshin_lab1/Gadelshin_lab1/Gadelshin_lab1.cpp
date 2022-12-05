@@ -8,6 +8,8 @@
 
 using namespace std;
 
+void create_graph(All& c);
+
 int main() {
     Pipe P;
     CS cs;
@@ -61,23 +63,7 @@ int main() {
         }
         case 10: {
             cout << "Choose: 1.Connect  0.Disconnect" << endl;
-            int chose = get_correct(0, 1);
-            if (chose == 1) {
-                if ((new_c.cs_map.size() < 2) or (new_c.p_map.size() < 1))
-                    cout << "There is no enough obj to create system!" << endl;
-                else
-                    cin >> new_c;
-
-            }
-            else
-                if (new_c.graph.size() != 0)
-                    cout << "\nProverim pozhe";
-                else
-                    cout << "There is no systems!"<<endl;
-
-            for (auto& [i, j] : new_c.graph)
-                cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
-
+            create_graph(new_c);
             break;
         }
         case 0:{
@@ -90,4 +76,39 @@ int main() {
         }
         }    
     }
+}
+
+void create_graph(All& c) {
+    int chose = get_correct(0, 1);
+    if (chose == 1) {
+        if ((c.cs_map.size() < 2) or (c.p_map.size() < 1))
+            cout << "There is no enough obj to create system!" << endl;
+        else
+            cin >> c;
+    }
+    else
+        if (c.graph.size() != 0) {
+            cout << "Input number of CS on entrance: " << endl;
+            int ent = get_correct(0, CS::max_idd);
+            cout << "Input number of CS on exit" << endl;
+            int ext = get_correct(0, CS::max_idd);
+            if (ent == ext) {
+                cout << "Choose another CS on exit!: ";
+                ext = get_correct(0, CS::max_idd);
+            }
+            auto a = c.graph.cbegin();
+            while (a != c.graph.cend()) {
+                if (((*a).second.id_ent == ent) and ((*a).second.id_ex == ext)) {
+                    c.graph.erase(a);
+                    break;
+                }
+                a++;
+            }
+        }
+        else
+            cout << "There is no systems!" << endl;
+
+    for (auto& [i, j] : c.graph)
+        cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
+
 }

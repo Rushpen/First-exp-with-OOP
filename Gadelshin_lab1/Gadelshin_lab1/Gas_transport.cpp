@@ -23,6 +23,10 @@ bool check_unused(CS& cs, float n) {
     return (cs.cs_unused() >= n);
 }
 
+/**bool check_diam(Pipe& p, double a) {
+    return (p.get_diam() == a);
+}*/
+
 int All::check_exist(int x) {
     while (cs_map.find(x) == cs_map.end()) {
         cout << "There isn't exist such CS, input another!" << endl;
@@ -58,7 +62,7 @@ bool All::check_used(int x, int y) {
     for (auto& i : graph) {
         if ((i.second.id_ent == x and i.second.id_ex == y) or (i.second.id_ent == y and i.second.id_ex == x)) {
             k++;
-            cout << "This connection is exists" << endl;
+            cout << "\nThis connection is exists!" << endl;
         }
         if (k == 0)
             return true;
@@ -176,6 +180,15 @@ unordered_set <int> All::search_pipes(unordered_map <int, Pipe>& p_map) {
         cout << p_map.at(v);
     return v_id;
 }
+
+/**unordered_set<int> All::search_d(unordered_map <int, Pipe>& p_map, double a) {
+    unordered_set<int>d_id;
+    if (p_map.size() != 0) {
+        d_id = search_p(p_map, check_diam, a);
+    }
+    return d_id;
+}*/
+
 
 void All::delete_pipes(unordered_map <int, Pipe>& p_map) {
     int id, h;
@@ -440,7 +453,7 @@ ostream& operator<<(ostream& out, unordered_set<int> s) {
 istream& operator >>(istream& in, All& gts) {
     All::System sys;
     cout << gts.cs_map;
-    cout << "Choose id of CS on entrance: " << endl;
+    cout << "Choose CS_id on entrance: " << endl;
     sys.id_ent = get_correct(0, INT_MAX);
     sys.id_ent = gts.check_exist(sys.id_ent);
     sys.id_ent = gts.check_graph(sys.id_ent);
@@ -454,8 +467,9 @@ istream& operator >>(istream& in, All& gts) {
     sys.id_ex = gts.check_exist(sys.id_ex);
     sys.id_ex = gts.check_graph(sys.id_ex);
     if (gts.check_used(sys.id_ent, sys.id_ex)) {
-        cout << "Choose pipe's diameter: 500, 700 or 1400" << endl;
+        cout << "Choose pipe's diameter from 500 to 1400: " << endl;
         double dia_pipe = get_correct(500.0, 1400.0);
+        //cout<<gts.search_d(gts.p_map, dia_pipe);
         int k = gts.edge(dia_pipe);
         while (gts.p_map.find(k) == gts.p_map.end()) {
             cout << "There is no such pipe, 1.Choose another  2.create" << endl;
@@ -465,7 +479,7 @@ istream& operator >>(istream& in, All& gts) {
                 cin >> p;
                 gts.p_map.insert({ p.get_pid(), p });
             }
-            cout << "Choose pipe's diameter: 500, 700 or 1400" << endl;
+            cout << "Choose pipe's diameter from 500 to 1400: " << endl;
             dia_pipe = get_correct(0.0, DBL_MAX);
             k = gts.edge(dia_pipe);
             cout << k<< endl;

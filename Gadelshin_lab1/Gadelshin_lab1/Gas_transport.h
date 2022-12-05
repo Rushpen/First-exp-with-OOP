@@ -25,6 +25,7 @@ public:
 	void save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map);
 	void load_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map);
 	unordered_set <int> search_pipes(unordered_map <int, Pipe>& p_map);
+	unordered_set<int> search_d(unordered_map <int, Pipe>& p_map, double a);
 	void delete_pipes(unordered_map <int, Pipe>& p_map);
 	void edit_pipe(unordered_map <int, Pipe>& p_map);
 	unordered_set <int> search_Css(unordered_map<int, CS>& cs_map);
