@@ -23,11 +23,7 @@ bool check_unused(CS& cs, float n) {
     return (cs.cs_unused() >= n);
 }
 
-/**bool check_diam(Pipe& p, double a) {
-    return (p.get_diam() == a);
-}*/
-
-int All::check_exist(int x) {
+int GTS::check_exist(int x) {
     while (cs_map.find(x) == cs_map.end()) {
         cout << "There isn't exist such CS, input another!" << endl;
         x = get_correct(0, INT_MAX);
@@ -35,7 +31,7 @@ int All::check_exist(int x) {
     return x;
 }
 
-int All::check_p(int x) {
+int GTS::check_vert(int x) {
     int j = 0;
     if (graph.size() != 0) {
         for (auto& i : graph) {
@@ -46,21 +42,21 @@ int All::check_p(int x) {
     return j;
 }
 
-int All::System::max_ids = 0;
+int GTS::System::max_ids = 0;
 
-int All::check_graph(int x) {
-    while (check_p(x) >= cs_map[x].get_w()) {
-        cout << "Choose another Cs!" << endl;
+int GTS::check_graph(int x) {
+    while (check_vert(x) >= cs_map[x].get_w()) {
+        cout << "Choose another id of CS" << endl;
         x = get_correct(0, INT_MAX);
 
     }
     return x;
 }
 
-bool All::check_used(int x, int y) {
+bool GTS::check_used(int x, int y) {
     int k = 0;
     for (auto& i : graph) {
-        if ((i.second.id_ent == x and i.second.id_ex == y) or (i.second.id_ent == y and i.second.id_ex == x)) {
+        if((i.second.id_ent == x and i.second.id_ex == y) or (i.second.id_ent == y and i.second.id_ex == x)){
             k++;
             cout << "\nThis connection is exists!" << endl;
         }
@@ -71,18 +67,19 @@ bool All::check_used(int x, int y) {
     }
 }
 
-bool All::check_i(int x) {
+bool GTS::check_i(int x) {
     int n = 0;
-    for (auto& i : graph)
+    for (auto& i : graph) {
         if (i.second.id_pip == x)
             n++;
+    }
     if (n == 0)
         return true;
 
     else return false;
 }
 
-int All::edge(int x) {
+int GTS::edge(int x) {
     int k = -1;
     for (auto& i : p_map) {
         if (i.second.get_diam() == x) {
@@ -95,7 +92,7 @@ int All::edge(int x) {
     return k;
 }
 
-void All::save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map)
+void GTS::save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map)
 {
     string f_n;
     cout << "Input filename: ";
@@ -118,7 +115,7 @@ void All::save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs
         cout << "\nError!Failed to open file!";
 }
 
-void All::load_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map)
+void GTS::load_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map)
 {
     int i, a, b;
     CS cs;
@@ -150,7 +147,7 @@ void All::load_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs
     fcin.close();
 }
 
-unordered_set <int> All::search_pipes(unordered_map <int, Pipe>& p_map) {
+unordered_set <int> GTS::search_pipes(unordered_map <int, Pipe>& p_map) {
     int a;
     unordered_set<int>v_id;
     if (p_map.size() != 0) {
@@ -181,16 +178,7 @@ unordered_set <int> All::search_pipes(unordered_map <int, Pipe>& p_map) {
     return v_id;
 }
 
-/**unordered_set<int> All::search_d(unordered_map <int, Pipe>& p_map, double a) {
-    unordered_set<int>d_id;
-    if (p_map.size() != 0) {
-        d_id = search_p(p_map, check_diam, a);
-    }
-    return d_id;
-}*/
-
-
-void All::delete_pipes(unordered_map <int, Pipe>& p_map) {
+void GTS::delete_pipes(unordered_map <int, Pipe>& p_map) {
     int id, h;
     bool ed;
     unordered_set<int>ids;
@@ -237,7 +225,7 @@ void All::delete_pipes(unordered_map <int, Pipe>& p_map) {
     }
 }
 
-void All::edit_pipe(unordered_map <int, Pipe>& p_map) {
+void GTS::edit_pipe(unordered_map <int, Pipe>& p_map) {
     bool a, d;
     int ed, id;
     unordered_set<int>ids;
@@ -297,7 +285,7 @@ void All::edit_pipe(unordered_map <int, Pipe>& p_map) {
         cout << "There is no Pipe for edit!" << endl;
 }
 
-unordered_set <int> All::search_Css(unordered_map<int, CS>& cs_map) {
+unordered_set <int> GTS::search_Css(unordered_map<int, CS>& cs_map) {
     int a;
     unordered_set<int> new_cs;
     if (cs_map.size() != 0)
@@ -330,7 +318,7 @@ unordered_set <int> All::search_Css(unordered_map<int, CS>& cs_map) {
     return new_cs;
 }
 
-void All::delete_css(unordered_map<int, CS>& cs_map) {
+void GTS::delete_css(unordered_map<int, CS>& cs_map) {
     int id, h;
     bool ed;
     unordered_set<int>ids;
@@ -377,7 +365,7 @@ void All::delete_css(unordered_map<int, CS>& cs_map) {
     }
 }
 
-void All::edit_cs(unordered_map<int, CS>& cs_map) {
+void GTS::edit_cs(unordered_map<int, CS>& cs_map) {
     int b = 0, ed, id;
     bool d;
     unordered_set<int>idcs;
@@ -442,6 +430,41 @@ void All::edit_cs(unordered_map<int, CS>& cs_map) {
         cout << "There is no CS for edit!" << endl;
 }
 
+void GTS::topologicalSortUtil(int V, unordered_map<int, bool>& visited, stack<int>& SortedV) {
+    visited[V] = true;
+    list<System>::iterator i;
+    for (i = Graph_l[V].begin(); i != Graph_l[V].end(); ++i)
+        if (!visited[i->id_ex])
+            topologicalSortUtil((*i).id_ex, visited, SortedV);
+    SortedV.push(V);
+    while (SortedV.empty() != false)
+        cout << SortedV.top()<<endl;
+
+}
+
+void GTS::topologicalSort()
+{
+    stack<int> SortedV;
+    unordered_map<int, bool>visited;
+    for (auto& v : Graph_l)
+        visited.insert({ v.first, false });
+    for (auto& v : Graph_l){
+        if (!visited[v.first])
+            topologicalSortUtil(v.first, visited, SortedV);
+    }
+
+    while (SortedV.empty() == false) {
+        cout << SortedV.top() << " ";
+        SortedV.pop();
+    }
+}
+
+void GTS::sort() {
+    GTS gt;
+    gt.fill_graphl(graph);
+    topologicalSort();
+}
+
 ostream& operator<<(ostream& out, unordered_set<int> s) {
     cout << "Free objects: ";
     for (auto& i : s)
@@ -450,15 +473,15 @@ ostream& operator<<(ostream& out, unordered_set<int> s) {
     return out;
 }
 
-istream& operator >>(istream& in, All& gts) {
-    All::System sys;
+istream& operator >>(istream& in, GTS& gts) {
+    GTS::System sys;
     cout << gts.cs_map;
-    cout << "Choose CS_id on entrance: " << endl;
+    cout << "CS_id on entrance: " << endl;
     sys.id_ent = get_correct(0, INT_MAX);
     sys.id_ent = gts.check_exist(sys.id_ent);
     sys.id_ent = gts.check_graph(sys.id_ent);
     cout << gts.cs_map;
-    cout << "Choose CS_id on exit" << endl;
+    cout << "CS_id on exit" << endl;
     sys.id_ex = get_correct(0, INT_MAX);
     while (sys.id_ex == sys.id_ent) {
         cout << "Error! Choose another CS to connect" << endl;
@@ -469,7 +492,6 @@ istream& operator >>(istream& in, All& gts) {
     if (gts.check_used(sys.id_ent, sys.id_ex)) {
         cout << "Choose pipe's diameter from 500 to 1400: " << endl;
         double dia_pipe = get_correct(500.0, 1400.0);
-        //cout<<gts.search_d(gts.p_map, dia_pipe);
         int k = gts.edge(dia_pipe);
         while (gts.p_map.find(k) == gts.p_map.end()) {
             cout << "There is no such pipe, 1.Choose another  2.create" << endl;
@@ -485,7 +507,6 @@ istream& operator >>(istream& in, All& gts) {
             cout << k<< endl;
         }
         sys.id_pip = k;
-
         gts.graph.insert({ sys.id, sys });
     }
     else {
@@ -493,3 +514,11 @@ istream& operator >>(istream& in, All& gts) {
     }
     return in;
 }
+
+    void GTS::fill_graphl(unordered_map<int, System>& sys) {
+    for (auto& e : sys) {
+        Graph_l[e.second.id_ent].push_back(e.second);
+    }
+
+}
+

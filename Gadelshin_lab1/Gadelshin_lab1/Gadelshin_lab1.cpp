@@ -8,12 +8,12 @@
 
 using namespace std;
 
-void create_graph(All& c);
+void create_graph(GTS& c);
 
 int main() {
     Pipe P;
     CS cs;
-    All new_c;
+    GTS new_c;
    int num_option(-1);
     while (num_option) {
         cout << "\nChoose: \n 1.Add pipe 2.Add CS 3.Show objects" <<
@@ -62,7 +62,6 @@ int main() {
             break;
         }
         case 10: {
-            cout << "Choose: 1.Connect  0.Disconnect" << endl;
             create_graph(new_c);
             break;
         }
@@ -78,37 +77,45 @@ int main() {
     }
 }
 
-void create_graph(All& c) {
-    int chose = get_correct(0, 1);
-    if (chose == 1) {
-        if ((c.cs_map.size() < 2) or (c.p_map.size() < 1))
-            cout << "There is no enough obj to create system!" << endl;
-        else
-            cin >> c;
+void create_graph(GTS& c) {
+    if (c.graph.size() != 0) {
+        cout << "Existing systems: " << endl;
+        for (auto& [i, j] : c.graph)
+            cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
     }
-    else
-        if (c.graph.size() != 0) {
-            cout << "Input number of CS on entrance: " << endl;
-            int ent = get_correct(0, CS::max_idd);
-            cout << "Input number of CS on exit" << endl;
-            int ext = get_correct(0, CS::max_idd);
-            if (ent == ext) {
-                cout << "Choose another CS on exit!: ";
-                ext = get_correct(0, CS::max_idd);
-            }
-            auto a = c.graph.cbegin();
-            while (a != c.graph.cend()) {
-                if (((*a).second.id_ent == ent) and ((*a).second.id_ex == ext)) {
-                    c.graph.erase(a);
-                    break;
-                }
-                a++;
-            }
+        cout << "\nChoose: 1.Connect  2. Topologic sort  0.Disconnect " << endl;
+        int chose = get_correct(0, 2);
+        if (chose == 1) {
+            if ((c.cs_map.size() < 2) or (c.p_map.size() < 1))
+                cout << "There is no enough obj to create system!" << endl;
+            else
+                cin >> c;
         }
-        else
-            cout << "There is no systems!" << endl;
+        else if (chose == 2){
+            c.fill_graphl(c.graph);
+            c.sort();
+        }
 
-    for (auto& [i, j] : c.graph)
-        cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
+        else if (chose == 0)
+            if (c.graph.size() != 0) {
+                cout << "Input number of CS on entrance: " << endl;
+                int ent = get_correct(0, CS::max_idd);
+                cout << "Input number of CS on exit" << endl;
+                int ext = get_correct(0, CS::max_idd);
+                if (ent == ext) {
+                    cout << "Choose another CS on exit!: ";
+                    ext = get_correct(0, CS::max_idd);
+                }
+                auto a = c.graph.cbegin();
+                while (a != c.graph.cend()) {
+                    if (((*a).second.id_ent == ent) and ((*a).second.id_ex == ext)) {
+                        c.graph.erase(a);
+                        break;
+                    }
+                    a++;
+                }
+            }
+            else
+                cout << "There is no systems!" << endl;
 
 }
