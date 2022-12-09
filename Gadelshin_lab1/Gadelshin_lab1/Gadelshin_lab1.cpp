@@ -14,6 +14,7 @@ int main() {
     Pipe P;
     CS cs;
     GTS new_c;
+
    int num_option(-1);
     while (num_option) {
         cout << "\nChoose: \n 1.Add pipe 2.Add CS 3.Show objects" <<
@@ -114,6 +115,7 @@ void create_graph(GTS& c) {
                     }
                     a++;
                 }
+                
             }
             else
                 cout << "There is no systems!" << endl;

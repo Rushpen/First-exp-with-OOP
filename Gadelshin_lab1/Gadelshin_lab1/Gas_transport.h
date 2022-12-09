@@ -31,28 +31,26 @@ public:
 	unordered_set <int> search_Css(unordered_map<int, CS>& cs_map);
 	void delete_css(unordered_map<int, CS>& cs_map);
 	void edit_cs(unordered_map<int, CS>& cs_map);
-	void topologicalSortUtil(int V, unordered_map<int, bool>& visited, stack<int>& SortedV);
+	void topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV);
 	void topologicalSort();
 
-
-	struct System {
+	struct Trio {
 		static int max_ids;
 		int id;
-		System() {
+		Trio() {
 			id = max_ids++;
 		}
 		int id_ent;
 		int id_ex;
 		int id_pip;
 	};
-	unordered_map<int, System>graph;
-	unordered_map <int, list<System>> Graph_l;
+	unordered_map<int, Trio>graph;
+	unordered_map <int, list<Trio>> Graph_l;
 
 	void sort();
-	void fill_graphl(unordered_map<int, System>& sys);
+	void fill_graphl(unordered_map<int, Trio>& sys);
 
-
-
-	friend istream& operator >> (istream& in, GTS& gts);
+	friend istream& operator>>(istream& in, GTS& gts);
 	friend ostream& operator<<(ostream& out, unordered_set<int> s);
+
 };

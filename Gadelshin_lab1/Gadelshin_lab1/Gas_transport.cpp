@@ -42,7 +42,7 @@ int GTS::check_vert(int x) {
     return j;
 }
 
-int GTS::System::max_ids = 0;
+int GTS::Trio::max_ids = 0;
 
 int GTS::check_graph(int x) {
     while (check_vert(x) >= cs_map[x].get_w()) {
@@ -430,39 +430,46 @@ void GTS::edit_cs(unordered_map<int, CS>& cs_map) {
         cout << "There is no CS for edit!" << endl;
 }
 
-void GTS::topologicalSortUtil(int V, unordered_map<int, bool>& visited, stack<int>& SortedV) {
-    visited[V] = true;
-    list<System>::iterator i;
-    for (i = Graph_l[V].begin(); i != Graph_l[V].end(); ++i)
-        if (!visited[i->id_ex])
+void GTS::topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV) {
+    visited[V] = 1;
+    list<Trio>::iterator i;
+    for (i = Graph_l[V].begin(); i != Graph_l[V].end(); ++i){
+        try {
+        if (visited[i->id_ex] == 0)
             topologicalSortUtil((*i).id_ex, visited, SortedV);
+        else if (visited[i->id_ex] == 1)
+            throw string("Found cycle in graph! Topological sort isn't possible!");
+        }
+        catch (...) {
+            throw;
+        }
+    }
+    visited[V] = 2;
     SortedV.push(V);
-    while (SortedV.empty() != false)
-        cout << SortedV.top()<<endl;
-
 }
 
 void GTS::topologicalSort()
 {
     stack<int> SortedV;
-    unordered_map<int, bool>visited;
+    unordered_map<int, int>visited;
     for (auto& v : Graph_l)
         visited.insert({ v.first, false });
+
     for (auto& v : Graph_l){
+        try {
         if (!visited[v.first])
             topologicalSortUtil(v.first, visited, SortedV);
+        }
+        catch (string cycle) {
+            cout<< cycle <<endl;
+            return;
+        }
+        
     }
-
     while (SortedV.empty() == false) {
         cout << SortedV.top() << " ";
         SortedV.pop();
     }
-}
-
-void GTS::sort() {
-    GTS gt;
-    gt.fill_graphl(graph);
-    topologicalSort();
 }
 
 ostream& operator<<(ostream& out, unordered_set<int> s) {
@@ -474,7 +481,7 @@ ostream& operator<<(ostream& out, unordered_set<int> s) {
 }
 
 istream& operator >>(istream& in, GTS& gts) {
-    GTS::System sys;
+    GTS::Trio sys;
     cout << gts.cs_map;
     cout << "CS_id on entrance: " << endl;
     sys.id_ent = get_correct(0, INT_MAX);
@@ -515,10 +522,16 @@ istream& operator >>(istream& in, GTS& gts) {
     return in;
 }
 
-    void GTS::fill_graphl(unordered_map<int, System>& sys) {
+void GTS::fill_graphl(unordered_map<int, GTS::Trio>& sys) {
+    Graph_l.clear();
     for (auto& e : sys) {
         Graph_l[e.second.id_ent].push_back(e.second);
     }
 
+}
+void GTS::sort() {
+    GTS gt;
+    gt.fill_graphl(graph);
+    topologicalSort();
 }
 
