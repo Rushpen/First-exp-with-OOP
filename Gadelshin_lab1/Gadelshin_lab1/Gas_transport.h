@@ -19,20 +19,9 @@ public:
 	int check_graph(int x);
 	int check_vert(int x);
 	bool check_used(int x, int y);
-	bool check_i(int x);
-	int edge(int x);
+	bool check_p_ex(int x);
+	int def_pid(int x);
 
-	void save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map);
-	void load_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map);
-	unordered_set <int> search_pipes(unordered_map <int, Pipe>& p_map);
-	unordered_set<int> search_d(unordered_map <int, Pipe>& p_map, double a);
-	void delete_pipes(unordered_map <int, Pipe>& p_map);
-	void edit_pipe(unordered_map <int, Pipe>& p_map);
-	unordered_set <int> search_Css(unordered_map<int, CS>& cs_map);
-	void delete_css(unordered_map<int, CS>& cs_map);
-	void edit_cs(unordered_map<int, CS>& cs_map);
-	void topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV);
-	void topologicalSort();
 
 	struct Trio {
 		static int max_ids;
@@ -44,6 +33,19 @@ public:
 		int id_ex;
 		int id_pip;
 	};
+
+	void save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map);
+	void load_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map, unordered_map<int, Trio>& gr);
+	unordered_set <int> search_pipes(unordered_map <int, Pipe>& p_map);
+	unordered_set<int> search_d(unordered_map <int, Pipe>& p_map, double a);
+	void delete_pipes(unordered_map <int, Pipe>& p_map);
+	void edit_pipe(unordered_map <int, Pipe>& p_map);
+	unordered_set <int> search_Css(unordered_map<int, CS>& cs_map);
+	void delete_css(unordered_map<int, CS>& cs_map);
+	void edit_cs(unordered_map<int, CS>& cs_map);
+	void topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV);
+	void topologicalSort();
+
 	unordered_map<int, Trio>graph;
 	unordered_map <int, list<Trio>> Graph_l;
 
@@ -52,5 +54,6 @@ public:
 
 	friend istream& operator>>(istream& in, GTS& gts);
 	friend ostream& operator<<(ostream& out, unordered_set<int> s);
+	friend ifstream& operator >> (ifstream& fcin, GTS::Trio& tr);
 
 };

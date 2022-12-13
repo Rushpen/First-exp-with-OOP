@@ -14,11 +14,12 @@ int main() {
     Pipe P;
     CS cs;
     GTS new_c;
+    GTS::Trio tr;
 
    int num_option(-1);
     while (num_option) {
         cout << "\nChoose: \n 1.Add pipe 2.Add CS 3.Show objects" <<
-            " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter_pipe 9.Filter_CS 10.Create Gas-Transport net 0.Exit\n";
+            " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter_pipe 9.Filter_CS 10.Gas-Transport net 0.Exit\n";
         num_option = get_correct(0, 10);
         switch (num_option)    {
         case 1: {
@@ -49,9 +50,10 @@ int main() {
             break;
             }
         case 7: {
-            new_c.load_file(new_c.p_map, new_c.cs_map);
+            new_c.load_file(new_c.p_map, new_c.cs_map, new_c.graph);
             P.max_id = new_c.p_map.size();
             cs.max_idd = new_c.cs_map.size();
+            tr.max_ids = new_c.graph.size();
             break;
            }
         case 8: {
