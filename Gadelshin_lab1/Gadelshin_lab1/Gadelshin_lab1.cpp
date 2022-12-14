@@ -8,13 +8,9 @@
 
 using namespace std;
 
-void create_graph(GTS& c);
-
-int main() {
-    Pipe P;
-    CS cs;
+int main() 
+{
     GTS new_c;
-    GTS::Trio tr;
 
    int num_option(-1);
     while (num_option) {
@@ -23,18 +19,18 @@ int main() {
         num_option = get_correct(0, 10);
         switch (num_option)    {
         case 1: {
-            cin >> P;
-            new_c.p_map.insert({P.get_pid(), P });
+            cin >> new_c.p;
+            new_c.p_map.insert({new_c.p.get_pid(), new_c.p });
             break;
             }
         case 2: {
-            cin >> cs;
-            new_c.cs_map.insert({cs.get_csid(), cs });
+            cin >> new_c.cs;
+            new_c.cs_map.insert({new_c.cs.get_csid(), new_c.cs });
             break;
             }
         case 3: {
-            P.show_pipe(new_c.p_map);
-            cs.show_cs(new_c.cs_map);
+            new_c.p.show_pipe(new_c.p_map);
+            new_c.cs.show_cs(new_c.cs_map);
             break;
             }
         case 4: {
@@ -51,9 +47,9 @@ int main() {
             }
         case 7: {
             new_c.load_file(new_c.p_map, new_c.cs_map, new_c.graph);
-            P.max_id = new_c.p_map.size();
-            cs.max_idd = new_c.cs_map.size();
-            tr.max_ids = new_c.graph.size();
+            new_c.p.max_id = new_c.p_map.size();
+            new_c.cs.max_idd = new_c.cs_map.size();
+            new_c.tr.max_ids = new_c.graph.size();
             break;
            }
         case 8: {
@@ -65,7 +61,7 @@ int main() {
             break;
         }
         case 10: {
-            create_graph(new_c);
+            new_c.create_graph();
             break;
         }
         case 0:{
@@ -80,46 +76,3 @@ int main() {
     }
 }
 
-void create_graph(GTS& c) {
-    if (c.graph.size() != 0) {
-        cout << "Existing systems: " << endl;
-        for (auto& [i, j] : c.graph)
-            cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
-    }
-        cout << "\nChoose: 1.Connect  2. Topologic sort  0.Disconnect " << endl;
-        int chose = get_correct(0, 2);
-        if (chose == 1) {
-            if ((c.cs_map.size() < 2) or (c.p_map.size() < 1))
-                cout << "There is no enough obj to create system!" << endl;
-            else
-                cin >> c;
-        }
-        else if (chose == 2){
-            c.fill_graphl(c.graph);
-            c.sort();
-        }
-
-        else if (chose == 0)
-            if (c.graph.size() != 0) {
-                cout << "Input number of CS on entrance: " << endl;
-                int ent = get_correct(0, CS::max_idd);
-                cout << "Input number of CS on exit" << endl;
-                int ext = get_correct(0, CS::max_idd);
-                if (ent == ext) {
-                    cout << "Choose another CS on exit!: ";
-                    ext = get_correct(0, CS::max_idd);
-                }
-                auto a = c.graph.cbegin();
-                while (a != c.graph.cend()) {
-                    if (((*a).second.id_ent == ent) and ((*a).second.id_ex == ext)) {
-                        c.graph.erase(a);
-                        break;
-                    }
-                    a++;
-                }
-                
-            }
-            else
-                cout << "There is no systems!" << endl;
-
-}

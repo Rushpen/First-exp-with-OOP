@@ -74,6 +74,20 @@ bool GTS::check_p_ex(int x) {
         return false;
 }
 
+bool GTS::check_del_cs(int x) {
+    int ch = 0;
+    for (auto& i : graph) {
+        if ((i.second.id_ent == x) || (i.second.id_ex == x))
+        {
+            ch++;
+        }
+    }
+    if (ch == 0)
+        return true;
+    else
+        return false;
+}
+
 int GTS::def_pid(int x) {
     int k = -1;
     for (auto& i : p_map) {
@@ -195,8 +209,16 @@ void GTS::delete_pipes(unordered_map <int, Pipe>& p_map) {
         cout << "\nInput index of pipe: " << endl;
         id = id_check(p_map);
         auto pipe = p_map.find(id);
-        p_map.erase(pipe);
-        cout << "\nPipe deleted!" << endl;
+           p_map.erase(pipe);
+           auto a = graph.cbegin();
+           while (a != graph.cend()) {
+               if (((*a).second.id_pip == id)) {
+                   graph.erase(a);
+                   break;
+               }
+               a++;
+           }
+            cout << "\nPipe deleted!" << endl;
     }
     if (ed == 1) {
         cout << "0.By ids  1.By filter" << endl;
@@ -334,9 +356,18 @@ void GTS::delete_css(unordered_map<int, CS>& cs_map) {
             cout << i.first << " ";
         cout << "\nInput index of CS: " << endl;
         id = id_check(cs_map);
-        auto pipe = cs_map.find(id);
-        cs_map.erase(pipe);
-        cout << "\nCS deleted" << endl;
+        for (int i = 0; i <= graph.size(); ++i)
+        {
+            auto a = graph.cbegin();
+            while (a != graph.cend()) {
+                if (((*a).second.id_ent == id) or ((*a).second.id_ex == id)) {
+                    graph.erase(a);
+                    break;
+                }
+            a++;
+            }
+        }
+
     }
     if (ed == 1) {
         cout << "0.By ids  1.By filter" << endl;
@@ -354,15 +385,23 @@ void GTS::delete_css(unordered_map<int, CS>& cs_map) {
                 if (cs_map.find(z) != cs_map.end())
                     ids.insert(z);
             }
-            for (auto& i : ids)
-                cs_map.erase(i);
+            for (auto& a : ids){
+                if (check_del_cs(a))
+                    cs_map.erase(a);
+                else
+                    cout << "CS can't be deleted! Check graph" << endl;
+            }
             cout << "\nCSs deleted!" << endl;
         }
         if (h == 1) {
             ids = search_Css(cs_map);
             if (ids.size() != 0) {
-                for (auto& i : ids)
-                    cs_map.erase(i);
+                for (auto& i : ids) {
+                    if (check_del_cs(i))
+                        cs_map.erase(i);
+                    else
+                        cout << "CS can't be deleted! Check graph!" << endl;
+                }
                 cout << "\nCSs deleted!" << endl;
             }
         }
@@ -434,6 +473,51 @@ void GTS::edit_cs(unordered_map<int, CS>& cs_map) {
         cout << "There is no CS for edit!" << endl;
 }
 
+void GTS::create_graph() {
+    GTS c;
+    if (graph.size() != 0) {
+        cout << "Existing systems: " << endl;
+        for (auto& [i, j] : graph)
+            cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
+    }
+    cout << "\nChoose: 1.Connect  2. Topologic sort  0.Disconnect " << endl;
+    int chose = get_correct(0, 2);
+    if (chose == 1) {
+        if ((cs_map.size() < 2) or (p_map.size() < 1))
+            cout << "There is no enough obj to create system!" << endl;
+        else
+            cin >> c;
+    }
+    else if (chose == 2) {
+        fill_graphl(graph);
+        sort();
+    }
+
+    else if (chose == 0)
+        if (graph.size() != 0) {
+            cout << "Input number of CS on entrance: " << endl;
+            int ent = get_correct(0, CS::max_idd);
+            cout << "Input number of CS on exit" << endl;
+            int ext = get_correct(0, CS::max_idd);
+            if (ent == ext) {
+                cout << "Choose another CS on exit!: ";
+                ext = get_correct(0, CS::max_idd);
+            }
+            auto a = graph.cbegin();
+            while (a != graph.cend()) {
+                if (((*a).second.id_ent == ent) and ((*a).second.id_ex == ext)) {
+                    graph.erase(a);
+                    break;
+                }
+                a++;
+            }
+
+        }
+        else
+            cout << "There is no systems!" << endl;
+
+}
+
 void GTS::topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV) {
     visited[V] = 1;
     list<Trio>::iterator i;
@@ -457,7 +541,7 @@ void GTS::topologicalSort()
     stack<int> SortedV;
     unordered_map<int, int>visited;
     for (auto& v : Graph_l) 
-        visited.insert({ v.first, false });
+        visited.insert({ v.first, 0 });
     for (auto& v : Graph_l){
         try {
         if (!visited[v.first])
@@ -481,6 +565,7 @@ void GTS::fill_graphl(unordered_map<int, GTS::Trio>& sys) {
     }
 
 }
+
 void GTS::sort() {
     GTS gt;
     gt.fill_graphl(graph);

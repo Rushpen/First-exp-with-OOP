@@ -12,7 +12,9 @@ using namespace std;
 class GTS
 {
 public:
+	Pipe p;
 	unordered_map <int, Pipe> p_map;
+	CS cs;
 	unordered_map <int, CS> cs_map;
 
 	int check_exist(int x);
@@ -21,6 +23,8 @@ public:
 	bool check_used(int x, int y);
 	bool check_p_ex(int x);
 	int def_pid(int x);
+	bool check_del_cs(int x);
+
 
 
 	struct Trio {
@@ -34,6 +38,8 @@ public:
 		int id_pip;
 	};
 
+	Trio tr;
+
 	void save_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map);
 	void load_file(unordered_map <int, Pipe>& p_map, unordered_map<int, CS>& cs_map, unordered_map<int, Trio>& gr);
 	unordered_set <int> search_pipes(unordered_map <int, Pipe>& p_map);
@@ -43,6 +49,7 @@ public:
 	unordered_set <int> search_Css(unordered_map<int, CS>& cs_map);
 	void delete_css(unordered_map<int, CS>& cs_map);
 	void edit_cs(unordered_map<int, CS>& cs_map);
+	void create_graph();
 	void topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV);
 	void topologicalSort();
 
@@ -51,6 +58,7 @@ public:
 
 	void sort();
 	void fill_graphl(unordered_map<int, Trio>& sys);
+
 
 	friend istream& operator>>(istream& in, GTS& gts);
 	friend ostream& operator<<(ostream& out, unordered_set<int> s);
