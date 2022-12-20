@@ -76,3 +76,19 @@ unordered_set <int> search_cs(unordered_map <int, CS>& cs_group, filter_cs<T> f,
     }
     return id;
 }
+
+template <typename T>
+T get_norm_value(T least, T great) {
+    T value = 0;
+    while (true)
+    {
+        if (cin >> value && (cin.peek() == EOF || cin.peek() == '\n') && (value >= least) && (value < great)) 
+            return value;
+        else 
+        {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Input correct value: ";
+        }
+    }
+}

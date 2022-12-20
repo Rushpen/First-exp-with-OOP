@@ -8,6 +8,8 @@
 
 using namespace std;
 
+void create_graph(GTS& c);
+
 int main() 
 {
     GTS new_c;
@@ -15,8 +17,8 @@ int main()
    int num_option(-1);
     while (num_option) {
         cout << "\nChoose: \n 1.Add pipe 2.Add CS 3.Show objects" <<
-            " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter_pipe 9.Filter_CS 10.Gas-Transport net 0.Exit\n";
-        num_option = get_correct(0, 10);
+            " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter_pipe 9.Filter_CS 10.Gas-Transport 11.Shortest path  net 0.Exit\n";
+        num_option = get_correct(0, 11);
         switch (num_option)    {
         case 1: {
             cin >> new_c.p;
@@ -61,7 +63,11 @@ int main()
             break;
         }
         case 10: {
-            new_c.create_graph();
+            create_graph(new_c);
+            break;
+        }
+        case 11: {
+            new_c.shortest_path();
             break;
         }
         case 0:{
@@ -76,3 +82,47 @@ int main()
     }
 }
 
+void create_graph(GTS& c) {
+    if (c.graph.size() != 0) {
+        cout << "Existing systems: " << endl;
+        for (auto& [i, j] : c.graph)
+            cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
+    }
+
+    cout << "\nChoose: 1.Connect  2. Topologic sort  0.Disconnect " << endl;
+    int chose = get_correct(0, 2);
+    if (chose == 1) {
+        if ((c.cs_map.size() < 2) or (c.p_map.size() < 1))
+            cout << "There is no enough obj to create system!" << endl;
+        else
+            cin >> c;
+    }
+    else if (chose == 2) {
+        c.fill_graphl(c.graph);
+        c.sort();
+    }
+
+    else if (chose == 0)
+        if (c.graph.size() != 0) {
+            cout << "Input number of CS on entrance: " << endl;
+            int ent = get_correct(0, CS::max_idd);
+            cout << "Input number of CS on exit" << endl;
+            int ext = get_correct(0, CS::max_idd);
+            if (ent == ext) {
+                cout << "Choose another CS on exit!: ";
+                ext = get_correct(0, CS::max_idd);
+            }
+            auto a = c.graph.cbegin();
+            while (a != c.graph.cend()) {
+                if (((*a).second.id_ent == ent) and ((*a).second.id_ex == ext)) {
+                    c.graph.erase(a);
+                    break;
+                }
+                a++;
+            }
+
+        }
+        else
+            cout << "There is no systems!" << endl;
+
+}

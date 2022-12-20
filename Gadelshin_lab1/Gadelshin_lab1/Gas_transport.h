@@ -49,15 +49,23 @@ public:
 	unordered_set <int> search_Css(unordered_map<int, CS>& cs_map);
 	void delete_css(unordered_map<int, CS>& cs_map);
 	void edit_cs(unordered_map<int, CS>& cs_map);
-	void create_graph();
+
 	void topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV);
 	void topologicalSort();
+
+
+	vector<double>deikstra(std::vector<std::vector<double>> gr, int src);
+
+	int min_lenght(const unordered_set<int>& spt_set, const vector<double>& distance);
+	void shortest_path();
 
 	unordered_map<int, Trio>graph;
 	unordered_map <int, list<Trio>> Graph_l;
 
 	void sort();
 	void fill_graphl(unordered_map<int, Trio>& sys);
+
+
 
 
 	friend istream& operator>>(istream& in, GTS& gts);

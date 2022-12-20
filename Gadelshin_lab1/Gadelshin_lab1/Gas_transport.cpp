@@ -473,50 +473,14 @@ void GTS::edit_cs(unordered_map<int, CS>& cs_map) {
         cout << "There is no CS for edit!" << endl;
 }
 
-void GTS::create_graph() {
-    GTS c;
-    if (graph.size() != 0) {
-        cout << "Existing systems: " << endl;
-        for (auto& [i, j] : graph)
-            cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
+void GTS::fill_graphl(unordered_map<int, GTS::Trio>& sys) {
+    Graph_l.clear();
+    for (auto& e : sys) {
+        Graph_l[e.second.id_ent].push_back(e.second);
     }
-    cout << "\nChoose: 1.Connect  2. Topologic sort  0.Disconnect " << endl;
-    int chose = get_correct(0, 2);
-    if (chose == 1) {
-        if ((cs_map.size() < 2) or (p_map.size() < 1))
-            cout << "There is no enough obj to create system!" << endl;
-        else
-            cin >> c;
-    }
-    else if (chose == 2) {
-        fill_graphl(graph);
-        sort();
-    }
-
-    else if (chose == 0)
-        if (graph.size() != 0) {
-            cout << "Input number of CS on entrance: " << endl;
-            int ent = get_correct(0, CS::max_idd);
-            cout << "Input number of CS on exit" << endl;
-            int ext = get_correct(0, CS::max_idd);
-            if (ent == ext) {
-                cout << "Choose another CS on exit!: ";
-                ext = get_correct(0, CS::max_idd);
-            }
-            auto a = graph.cbegin();
-            while (a != graph.cend()) {
-                if (((*a).second.id_ent == ent) and ((*a).second.id_ex == ext)) {
-                    graph.erase(a);
-                    break;
-                }
-                a++;
-            }
-
-        }
-        else
-            cout << "There is no systems!" << endl;
 
 }
+
 
 void GTS::topologicalSortUtil(int V, unordered_map<int, int>& visited, stack<int>& SortedV) {
     visited[V] = 1;
@@ -558,18 +522,120 @@ void GTS::topologicalSort()
     }
 }
 
-void GTS::fill_graphl(unordered_map<int, GTS::Trio>& sys) {
-    Graph_l.clear();
-    for (auto& e : sys) {
-        Graph_l[e.second.id_ent].push_back(e.second);
-    }
-
-}
-
 void GTS::sort() {
     GTS gt;
     gt.fill_graphl(graph);
     topologicalSort();
+}
+
+
+int GTS::min_lenght(const unordered_set<int>& spt_set, const vector<double>& distance) {
+
+    double least = numeric_limits<double>::max();
+
+    int idx = 0;
+
+    for (int i=0; i < distance.size(); ++i) {
+        if (distance[i] < least && !spt_set.contains(i)) {
+            least = distance[i];
+            idx = i;
+        }
+    }
+    return idx;
+}
+
+vector<double> GTS::deikstra(vector<vector<double>> Graph, int src) {
+
+    unordered_set<int> spt_set;
+    int Inf = std::numeric_limits<int>::max();
+
+    vector<double> distance(Graph.size(), Inf);
+
+    distance[src] = 0;
+
+    for (int cnt = 0; cnt < (Graph.size() - 1); ++cnt) {
+
+        int m = min_lenght(spt_set, distance);
+
+        spt_set.insert(m);
+
+
+        for (int v(0); v < Graph.size(); ++v) {
+            if (!spt_set.contains(v) && Graph[m][v] != 0 && distance[m] != Inf)
+                distance[v] = min(distance[v], distance[m] + Graph[m][v]);
+        }
+    }
+
+    return distance;
+}
+
+
+void GTS::shortest_path() 
+{
+    unordered_map<int, int> id_idx;
+    unordered_map<int, int> idx_id;
+    unordered_set<int> spt_cs;
+    vector<vector<double>> Graph(cs_map.size(), vector<double>(cs_map.size(), 0.0));
+
+    int idx = 0;
+
+    for (auto& [id_pip, trio] : graph) 
+    {
+        if (!spt_cs.contains(trio.id_ent)) 
+        {
+            id_idx[trio.id_ent] = idx;
+            idx_id[idx] = trio.id_ent;
+            spt_cs.insert(trio.id_ent);
+
+            idx++;
+        }
+        if (!spt_cs.contains(trio.id_ex)) 
+        {
+            id_idx[trio.id_ex] = idx;
+            idx_id[idx] = trio.id_ex;
+            spt_cs.insert(trio.id_ex);
+
+            idx++;
+        }
+    }
+    for (auto& [id_pip, trio] : graph) 
+    {
+        if (p_map[id_pip].get_stat() == true)
+            Graph[id_idx[trio.id_ent]][id_idx[trio.id_ex]] = p_map[trio.id_pip].get_len();
+    }
+    cout << "\nMatrix of adjacency: ";
+    for (int i = 0; i < graph.size(); ++i) 
+    {
+        cout << endl;
+        for (int j = 0; j < Graph.size(); ++j)
+            cout << Graph[i][j] <<" ";
+    }
+    cout << endl;
+
+    int src;
+
+    while (true) 
+    {
+        cout << "\nFirst vertex: ";
+        src = get_norm_value(1, numeric_limits<int>::max());
+        if (id_idx.contains(src)) {
+            src = id_idx[src];
+            break;
+        }
+        cout << "There is no this node in graph" << endl;
+    }
+
+    vector<double> distance = deikstra(Graph, src);
+
+    for (int i = 0; i < distance.size(); i++) 
+    {
+        cout << "Lenght to " << idx_id[i];
+        if (distance[i] == numeric_limits<int>::max())
+            cout << ": Inf" << endl;
+
+        else
+            cout << " : " << distance[i] << endl;
+    }
 }
 
 ostream& operator<<(ostream& out, unordered_set<int> s) {
