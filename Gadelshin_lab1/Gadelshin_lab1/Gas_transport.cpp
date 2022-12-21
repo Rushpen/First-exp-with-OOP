@@ -575,6 +575,7 @@ void GTS::shortest_path()
     unordered_map<int, int> id_idx;
     unordered_map<int, int> idx_id;
     unordered_set<int> spt_cs;
+
     vector<vector<double>> Graph(cs_map.size(), vector<double>(cs_map.size(), 0.0));
 
     int idx = 0;
@@ -603,7 +604,7 @@ void GTS::shortest_path()
         if (p_map[id_pip].get_stat() == true)
             Graph[id_idx[trio.id_ent]][id_idx[trio.id_ex]] = p_map[trio.id_pip].get_len();
     }
-    cout << "\nMatrix of adjacency: ";
+    cout << "\nMatrix of adjacency: \n";
     for (int i = 0; i < graph.size(); ++i) 
     {
         cout << endl;
