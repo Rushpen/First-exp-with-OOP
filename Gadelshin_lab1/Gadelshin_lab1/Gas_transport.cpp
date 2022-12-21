@@ -632,9 +632,9 @@ void GTS::shortest_path()
     {
         cout << "Lenght to " << idx_id[i];
         if (distance[i] == numeric_limits<int>::max())
-            cout << ": Inf" << endl;
+            cout << ":  nope " << endl;
 
-        else
+        else 
             cout << " : " << distance[i] << endl;
     }
 }

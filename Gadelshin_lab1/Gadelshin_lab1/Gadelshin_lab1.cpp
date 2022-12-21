@@ -17,7 +17,7 @@ int main()
    int num_option(-1);
     while (num_option) {
         cout << "\nChoose: \n 1.Add pipe 2.Add CS 3.Show objects" <<
-            " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter_pipe 9.Filter_CS 10.Gas-Transport 11.Shortest path  net 0.Exit\n";
+            " 4.Edit Pipe 5.Edit CS 6.Save 7.Load 8.Filter_pipe 9.Filter_CS 10.Gas-Transport net 11.Deikstra  0.Exit\n";
         num_option = get_correct(0, 11);
         switch (num_option)    {
         case 1: {
