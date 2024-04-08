@@ -84,7 +84,7 @@ int main()
 
 void create_graph(GTS& c) {
     if (c.graph.size() != 0) {
-        cout << "Existing systems: " << endl;
+        cout << "\nExisting systems: " << endl;
         for (auto& [i, j] : c.graph)
             cout << i << ") " << j.id_ent << " " << j.id_ex << " " << j.id_pip << endl;
     }

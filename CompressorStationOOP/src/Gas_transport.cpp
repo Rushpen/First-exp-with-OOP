@@ -614,6 +614,7 @@ void GTS::shortest_path()
     cout << endl;
 
     int src;
+    int srci;
 
     while (true) 
     {
